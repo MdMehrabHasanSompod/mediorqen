@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+body{
+    font-family: var(--font-body), system-ui, sans-serif;;
+}
+
+h1,h2,h3,h4,h5,h6 {
+   font-family: var(--font-heading), sans-serif;
+}
+
+.form-input {
+  @apply w-full px-4 py-2 rounded-lg border border-gray-300 text-xs
+  focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
