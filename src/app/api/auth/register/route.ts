@@ -2,7 +2,6 @@ import connectDB from "@/src/app/lib/db";
 import { User } from "@/src/app/models/user.model";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt"
-import jwt from "jsonwebtoken"
 
 export const POST = async(request:NextRequest)=>{
     try {
@@ -37,14 +36,9 @@ export const POST = async(request:NextRequest)=>{
         age
        })
     
-       const token = jwt.sign(
-    { id: newUser._id, email: newUser.email, role: newUser.role },
-    process.env.JWT_SECRET!,
-    { expiresIn: "10d" }
-    );
 
        return NextResponse.json({
-        success:true,message:"User registered successfully",token
+        success:true,message:"User registered successfully. Please login to continue", newUser
        },{status:200})
 
     } catch (error) {
