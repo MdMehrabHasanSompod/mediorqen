@@ -9,6 +9,6 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 .form-input {
-  @apply w-full px-4 py-2 rounded-lg border border-gray-300 text-xs
+  @apply w-full px-4 py-3 rounded-lg border border-gray-300 text-xs
   focus:outline-none focus:ring-2 focus:ring-blue-500;
 }

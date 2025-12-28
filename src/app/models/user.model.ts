@@ -35,7 +35,7 @@ const userSchema  = new mongoose.Schema<IUser>({
      password:{
         type: String,
         minlength:[8,"Password must be at least 8 characters"],
-        match:[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])(?=\S+$).{8,100}$/,"Password validation failed"],
+        match:[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])(?=\S+$).{8,200}$/,"Password validation failed"],
         select:false,
     },
     role:{

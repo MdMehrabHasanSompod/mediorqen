@@ -23,9 +23,13 @@ const Login = () => {
         email,password
       })
       console.log(result);
+      setEmail("");
+      setPassword("");
       setLoading(false);
     } catch (error) {
       console.log(error);
+      setEmail("");
+      setPassword("");
       setLoading(false);
     }
   };
@@ -41,7 +45,7 @@ const Login = () => {
           Back
         </Link>
         <h1 className="text-lg font-semibold text-gray-800 text-center mb-4">
-          Login
+          Login to Continue
         </h1>
         <form className="space-y-3" onSubmit={submitHandler}>
           <input
@@ -58,8 +62,9 @@ const Login = () => {
               type={showPass ? "text" : "password"}
               placeholder="Password"
               className="form-input pr-10"
-              pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$"
+              pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,24}$"
               required
+              value={password}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setPassword(e.target.value)
               }
@@ -72,9 +77,9 @@ const Login = () => {
                   target.setCustomValidity(
                     "Password must be at least 8 characters"
                   );
-                } else if (target.value.length > 15) {
+                } else if (target.value.length > 24) {
                   target.setCustomValidity(
-                    "Password cannot exceed 15 characters"
+                    "Password cannot exceed 24 characters"
                   );
                 } else if (target.validity.patternMismatch) {
                   target.setCustomValidity(

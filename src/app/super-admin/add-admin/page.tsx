@@ -1,48 +1,41 @@
 "use client";
 import axios from "axios";
-import { ArrowLeft, Eye, EyeOff, Loader2 } from "lucide-react";
-import { signIn } from "next-auth/react";
-import Image from "next/image";
+import { ArrowLeft, Eye, EyeOff, Loader2, UserCog} from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import React, { FormEvent, useState } from "react";
 
-const Register = () => {
+const AddAdminPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
-  const [age, setAge] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
-  const router = useRouter()
+
 
   const submitHandler = async (e: FormEvent) => {
     e.preventDefault();
     try {
       setLoading(true);
-      const result = await axios.post("/api/auth/register", {
+      const result = await axios.post("/api/super-admin/add-admin", {
         name,
         email,
         phone,
         password,
-        age,
+        role:"admin"
       });
       console.log(result);
       setName("");
       setEmail("");
       setPassword("");
       setPhone("");
-      setAge("");
       setLoading(false);
-      router.push("/login")
     } catch (error) {
       console.log(error);
       setName("");
       setEmail("");
       setPassword("");
       setPhone("");
-      setAge("");
       setLoading(false);
     }
   };
@@ -51,14 +44,14 @@ const Register = () => {
     <div className="min-h-screen flex items-center justify-center px-5 bg-gray-50">
       <div className="w-full max-w-sm bg-white rounded-xl shadow-lg p-5">
         <Link
-          href="/"
-          className="flex items-center gap-1 text-sm text-gray-600 hover:text-blue-600 mb-3"
+          href="/super-admin/dashboard"
+          className="flex items-center gap-1 text-sm text-gray-600 hover:text-blue-600 mb-5"
         >
           <ArrowLeft size={16} />
-          Back
+          Back to Dashboard
         </Link>
-        <h1 className="text-lg font-semibold text-gray-800 text-center mb-4">
-          Create Account
+        <h1 className="flex items-center justify-center gap-2 text-lg font-semibold text-gray-800 text-center mb-4">
+          Create Admin <UserCog className="w-5 h-5"/>
         </h1>
         <form className="space-y-3" onSubmit={submitHandler}>
           <input
@@ -141,22 +134,6 @@ const Register = () => {
             </button>
           </div>
 
-          <input
-            type="number"
-            placeholder="Age"
-            min={1}
-            max={150}
-            className="form-input"
-            value={age}
-            onChange={(e) => setAge(e.target.value)}
-            required
-          />
-
-          <label className="flex items-start gap-2 text-xs text-gray-600">
-            <input type="checkbox" className="mt-1" required />I agree to the
-            Terms & Privacy Policy
-          </label>
-
           <button
             type="submit"
             disabled={loading}
@@ -164,36 +141,13 @@ const Register = () => {
           >
             {" "}
             {loading && <Loader2 size={16} className="animate-spin" />}
-            Create Account
+            Create Admin
           </button>
         </form>
 
-        <div className="flex items-center gap-2 my-4">
-          <div className="flex-1 h-px bg-gray-200" />
-          <span className="text-xs text-gray-400">OR</span>
-          <div className="flex-1 h-px bg-gray-200" />
-        </div>
-
-        <button
-          type="submit"
-          className="w-full flex items-center justify-center gap-3 border border-gray-300 py-2 rounded-lg hover:bg-gray-50 transition"
-          onClick={()=>signIn("google")}
-        >
-          <Image src="/google.png" alt="Google" width={24} height={24} />
-          <span className="text-sm font-medium text-gray-700 cursor-pointer">
-            Continue with Google
-          </span>
-        </button>
-
-        <p className="text-center text-xs text-gray-500 mt-4">
-          Already have an account?{" "}
-          <span onClick={()=>router.push("/login")} className="text-blue-600 font-medium cursor-pointer hover:underline">
-            Login
-          </span>
-        </p>
       </div>
     </div>
   );
 };
 
-export default Register;
+export default AddAdminPage;
