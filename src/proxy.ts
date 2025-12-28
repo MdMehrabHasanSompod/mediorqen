@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 
-export async function proxy(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
     const pathname = request.nextUrl.pathname
     const publicRoutes:string[] = ["/about","/contact","/doctors","/services"]
     const authenticationRoutes:string[] = ["/register","/login","/api/auth"]
@@ -43,13 +43,22 @@ export async function proxy(request: NextRequest) {
     }
      
     return NextResponse.next()
- 
 }
+ 
  
 
 export const config = {
   matcher: [
     '/api/:path*',
-    '/(user|admin|super-admin|dashboard|appointments|tests)/:path*',
+    '/admin',
+    '/admin/:path*',
+    '/super-admin',
+    '/super-admin/:path*',
+    '/user',
+    '/user/:path*',
+    '/appointments/:path*',
+    '/tests/:path*',
+    '/login',
+    '/register'
   ],
 }
