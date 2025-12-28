@@ -10,6 +10,22 @@ export default async function proxy(request: NextRequest) {
     const userRoutes:string[] = ["/user","/appointments","/tests"]
     const adminRoutes:string[] = ["/admin"]
     const superAdminRoutes:string[] = ["/super-admin"]
+     const apiRoutes:Record<string,string[]> = {
+      "user": ["/api/user"],
+      "admin": ["/api/admin"],
+      "super-admin": ["/api/super-admin"]
+      };
+      const roleBasedRoutes: Record<string, string[]> = {
+      "user": userRoutes,
+      "admin": adminRoutes,
+      "super-admin": superAdminRoutes
+       };
+      const dashboards:Record<string,string> = {
+      "user": "/user/dashboard",
+      "admin": "/admin/dashboard",
+      "super-admin": "/super-admin/dashboard",
+      };
+
     if(pathname === "/" || publicRoutes.some(route=>pathname.startsWith(route))){
       return NextResponse.next()
     }
@@ -22,25 +38,18 @@ export default async function proxy(request: NextRequest) {
     }
     if(!token){
       return NextResponse.redirect(new URL("/login",request.url))
+     }
+
+   if(pathname.startsWith("/api") && token && !(apiRoutes[token.role]||[]).some(route => pathname.startsWith(route))){
+    return NextResponse.json({ error: "Attempted to Unauthorized Access" }, { status: 401 });
     }
-    if(token && authenticationRoutes.some(route=>pathname.startsWith(route)) && token.role === "user"){
-      return NextResponse.redirect(new URL("/user/dashboard",request.url))
-    }
-    if(token && authenticationRoutes.some(route=>pathname.startsWith(route)) && token.role === "admin"){
-      return NextResponse.redirect(new URL("/admin/dashboard",request.url))
-    }
-    if(token && authenticationRoutes.some(route=>pathname.startsWith(route)) && token.role === "super-admin"){
-      return NextResponse.redirect(new URL("/super-admin/dashboard",request.url))
-    }
-    if(token.role==="user" && (adminRoutes.some(route=>pathname.startsWith(route))||superAdminRoutes.some(route=>pathname.startsWith(route)))){
-      return NextResponse.redirect(new URL("/user/dashboard",request.url))
-    }
-     if(token.role==="admin" && (userRoutes.some(route=>pathname.startsWith(route))||superAdminRoutes.some(route=>pathname.startsWith(route)))){
-      return NextResponse.redirect(new URL("/admin/dashboard",request.url))
-    }
-     if(token.role==="super-admin" && (userRoutes.some(route=>pathname.startsWith(route))||adminRoutes.some(route=>pathname.startsWith(route)))){
-      return NextResponse.redirect(new URL("/super-admin/dashboard",request.url))
-    }
+
+    if(token && authenticationRoutes.some(route=>pathname.startsWith(route))){
+    return NextResponse.redirect(new URL(dashboards[token.role] || '/', request.url));
+   }
+    if (token && !(roleBasedRoutes[token.role]||[]).some(route => pathname.startsWith(route))) {
+    return NextResponse.redirect(new URL(dashboards[token.role] || '/', request.url));
+   }
      
     return NextResponse.next()
 }
@@ -56,7 +65,6 @@ export const config = {
     '/super-admin/:path*',
     '/user',
     '/user/:path*',
-    '/appointments/:path*',
     '/tests/:path*',
     '/login',
     '/register'
