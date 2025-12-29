@@ -12,19 +12,22 @@ export default async function proxy(request: NextRequest) {
   const publicRoutes = ["/about", "/contact", "/doctors", "/services"];
   const authenticationRoutes = ["/login", "/register"];
   const roleBasedRoutes: Record<string, string[]> = {
-    user: ["/user", "/appointments", "/tests"],
-    admin: ["/admin"],
-    "super-admin": ["/super-admin"],
+    "user": ["/user", "/appointments", "/tests"],
+    "admin": ["/admin"],
+    "super-admin" : ["/super-admin"],
+    "doctor":["/doctor"],
   };
   const apiRoutes: Record<string, string[]> = {
-    user: ["/api/user"],
-    admin: ["/api/admin"],
+    "user": ["/api/user"],
+    "admin": ["/api/admin"],
     "super-admin": ["/api/super-admin"],
+    "doctor":["/api/doctor"],
   };
   const dashboards: Record<string, string> = {
-    user: "/user/dashboard",
-    admin: "/admin/dashboard",
+    "user": "/user/dashboard",
+    "admin": "/admin/dashboard",
     "super-admin": "/super-admin/dashboard",
+    "doctor":"/doctor/dashboard"
   };
 
   if (publicRoutes.some((r) => pathname.startsWith(r))) {
@@ -84,5 +87,6 @@ export const config = {
     "/user/:path*",
     "/login",
     "/register",
+    "/doctor/:path*"
   ],
 };

@@ -45,7 +45,7 @@ const AddAdminPage = () => {
       <div className="w-full max-w-sm bg-white rounded-xl shadow-lg p-5">
         <Link
           href="/super-admin/dashboard"
-          className="flex items-center gap-1 text-sm text-gray-600 hover:text-blue-600 mb-5"
+          className="flex items-center gap-1 text-xs text-gray-600 hover:text-blue-600 mb-5"
         >
           <ArrowLeft size={16} />
           Back to Dashboard
@@ -137,7 +137,7 @@ const AddAdminPage = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 cursor-pointer flex items-center justify-center gap-2 text-white text-sm font-medium py-2.5 rounded-lg transition"
+            className="w-full bg-blue-600 hover:bg-blue-700 cursor-pointer flex items-center justify-center gap-2 text-white text-xs font-medium py-2 rounded-lg transition"
           >
             {" "}
             {loading && <Loader2 size={16} className="animate-spin" />}

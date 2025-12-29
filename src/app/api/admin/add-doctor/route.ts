@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { Doctor } from "@/src/app/models/doctor.model";
 import uploadOnCloudinary from "@/src/app/lib/cloudinary";
+import { User } from "@/src/app/models/user.model";
+import mongoose from "mongoose";
 
 export const POST = async (request: NextRequest) => {
   try {
@@ -15,87 +17,80 @@ export const POST = async (request: NextRequest) => {
     const fees = formData.get("fees") as string;
     const image = formData.get("image") as Blob | null;
     const qualifications = formData.get("qualifications") as string;
-    if (
-      !name ||
-      !email ||
-      !phone ||
-      !password ||
-      !image ||
-      !speciality ||
-      !fees
-    ) {
-      return NextResponse.json(
-        { success: false, message: "All fields are required" },
-        { status: 400 }
-      );
-    }
-    const qualificationsArray = JSON.parse(qualifications || "[]");
 
-    if (
-      !Array.isArray(qualificationsArray) ||
-      qualificationsArray.length === 0
-    ) {
-      return NextResponse.json(
-        { success: false, message: "At least one qualification is required" },
-        { status: 400 }
-      );
+    if (!name || !email || !phone || !password || !image || !speciality || !fees) {
+      return NextResponse.json({ success: false, message: "All fields are required" }, { status: 400 });
+    }
+
+    const qualificationsArray = JSON.parse(qualifications || "[]");
+    if (!Array.isArray(qualificationsArray) || qualificationsArray.length === 0) {
+      return NextResponse.json({ success: false, message: "At least one qualification is required" }, { status: 400 });
     }
 
     if (password.length < 8) {
-      return NextResponse.json(
-        { success: false, message: "Password must be 8 characters" },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, message: "Password must be at least 8 characters" }, { status: 400 });
     }
     if (!(image instanceof Blob)) {
-      return NextResponse.json(
-        { success: false, message: "Image file is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, message: "Image file is required" }, { status: 400 });
     }
 
     const feesNumber = Number(fees);
     if (isNaN(feesNumber)) {
-      return NextResponse.json(
-        { success: false, message: "Fees is undefined" },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, message: "Fees is undefined" }, { status: 400 });
     }
 
     await connectDB();
-    const isDoctorExisted = await Doctor.findOne({ email });
-    if (isDoctorExisted) {
-      return NextResponse.json(
-        { success: false, message: "Doctor already exists" },
-        { status: 409 }
-      );
+
+    const isExisted = await Doctor.findOne({ email }) || await User.findOne({ email });
+    if (isExisted) {
+      return NextResponse.json({ success: false, message: "Doctor already exists" }, { status: 409 });
     }
+
     const hashedPassword = await bcrypt.hash(password, 10);
-    const imageUrl = await uploadOnCloudinary(image);
+  
 
-    const newDoctor = await Doctor.create({
-      name,
-      email,
-      phone,
-      password: hashedPassword,
-      image: imageUrl,
-      speciality,
-      fees: feesNumber,
-      qualifications: qualificationsArray,
-    });
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
-    return NextResponse.json(
-      {
+    try {
+      const newUser = await User.create([{
+        name,
+        email,
+        phone,
+        password: hashedPassword,
+        role: "doctor"
+      }], { session });
+
+      
+
+        const imageUrl = await uploadOnCloudinary(image);
+        const newUserId = await newUser[0]._id;
+      const newDoctor = await Doctor.create([{
+        userId: newUserId,
+        name,
+        email,
+        phone,
+        image: imageUrl,
+        speciality,
+        fees: feesNumber,
+        qualifications: qualificationsArray,
+      }], { session });
+
+      await session.commitTransaction();
+      session.endSession();
+
+      return NextResponse.json({
         success: true,
-        message: "Doctor added successfully",
-        newDoctor,
-      },
-      { status: 200 }
-    );
+        message: "Doctor added successfully"
+      }, { status: 200 });
+
+    } catch (err) {
+      await session.abortTransaction();
+      session.endSession();
+      throw err;
+    }
+
   } catch (error) {
-    return NextResponse.json(
-      { success: false, message: `Internal server error${error}` },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, message: `Internal server error${error}` }, { status: 500 });
   }
 };

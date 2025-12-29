@@ -7,7 +7,7 @@ interface IUser{
     password?:string,
     age?:number,
     bloodGroup?: "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-",
-    role:"user" | "admin" | "super-admin",
+    role:"user" | "admin" | "super-admin" | "doctor",
     avatar?:string,
     createdAt?:Date,
     updatedAt?:Date,
@@ -40,7 +40,7 @@ const userSchema  = new mongoose.Schema<IUser>({
     },
     role:{
         type: String,
-        enum: ["user","admin","super-admin"],
+        enum: ["user","admin","super-admin","doctor"],
         default:"user"
     },
     avatar:{

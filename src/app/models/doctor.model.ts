@@ -6,11 +6,11 @@ type qualification = {
 };
 
 interface IDoctor {
+  userId:mongoose.Schema.Types.ObjectId,
   name: string;
   image: string;
   email: string;
   phone: string;
-  password: string;
   role: "doctor";
   speciality: string;
   fees: number;
@@ -26,7 +26,11 @@ const qualificationSchema = new mongoose.Schema<qualification>({
 
 
 const doctorSchema = new mongoose.Schema<IDoctor>(
-  {
+  { userId:{
+  type: mongoose.Schema.Types.ObjectId,
+  ref:"User",
+  required: true,
+  },
     name: {
       type: String,
       required: true,
@@ -44,16 +48,6 @@ const doctorSchema = new mongoose.Schema<IDoctor>(
     phone: {
       type: String,
       match: [/^\+?01[3-9]\d{8}$/, "Please enter a valid phone number"],
-      required:true,
-    },
-    password: {
-      type: String,
-      minlength: [8, "Password must be at least 8 characters"],
-      match: [
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])(?=\S+$).{8,200}$/,
-        "Password validation failed",
-      ],
-      select: false,
       required:true,
     },
     role: {

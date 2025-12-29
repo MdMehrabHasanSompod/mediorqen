@@ -150,10 +150,12 @@ const AddDoctor = () => {
       setLoading(false);
     }
   };
+  const addSoftHyphens = (text: string) => text.split("").join("\u00AD");
+
 
   return (
     <div className="min-h-screen flex items-center justify-center px-5 bg-gray-50">
-      <div className="w-full max-w-sm bg-white mx-2  my-4rounded-xl shadow-lg p-5">
+      <div className="w-full max-w-sm bg-white mx-1  my-2 rounded-xl shadow-lg p-5">
         <Link
           href="/super-admin/dashboard"
           className="flex items-center gap-1 text-xs text-gray-600 hover:text-blue-600 mb-5"
@@ -304,11 +306,11 @@ const AddDoctor = () => {
                 key={index}
                 className="flex justify-between items-center gap-2 p-3 border border-gray-200 rounded-xl bg-gray-50"
               >
-                <div>
-                  <p className="text-sm font-medium text-gray-800">
-                    {q.degree}
+                <div className="break-all hyphens-auto flex-1">
+                  <p className="text-sm font-medium text-gray-800 break-all hyphens-auto">
+                    {addSoftHyphens(q.degree)}
                   </p>
-                  <p className="text-xs text-gray-500">{q.institution}</p>
+                  <p className="text-xs text-gray-500 break-all hyphens-auto ">{addSoftHyphens(q.institution)}</p>
                 </div>
                 <button
                   type="button"
