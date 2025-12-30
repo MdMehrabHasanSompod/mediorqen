@@ -10,6 +10,7 @@ export default async function proxy(request: NextRequest) {
   });
 
   const publicRoutes = ["/about", "/contact", "/doctors", "/services"];
+  const publicApiRoutes = ["/api/doctors"]
   const authenticationRoutes = ["/login", "/register"];
   const roleBasedRoutes: Record<string, string[]> = {
     "user": ["/user", "/appointments", "/tests"],
@@ -48,6 +49,10 @@ export default async function proxy(request: NextRequest) {
   }
 
   if (pathname.startsWith("/api")) {
+     if (publicApiRoutes.some((r) => pathname.startsWith(r))) {
+      return NextResponse.next();
+     }
+
     if (!token) {
       return NextResponse.json(
         { success: false, message: "Attempted to Unauthorized Access" },

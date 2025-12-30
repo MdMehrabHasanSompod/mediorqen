@@ -48,7 +48,7 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-5 bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center px-5">
       <div className="w-full max-w-sm bg-white rounded-xl shadow-lg p-5">
         <Link
           href="/"

@@ -13,6 +13,7 @@ interface IDoctor {
   phone: string;
   role: "doctor";
   speciality: string;
+  availability:boolean;
   fees: number;
   qualifications: qualification[];
   createdAt?: Date;
@@ -52,7 +53,13 @@ const doctorSchema = new mongoose.Schema<IDoctor>(
     },
     role: {
       type: String,
+      required:true,
       default: "doctor",
+    },
+    availability:{
+      type: Boolean,
+      required:true,
+      default:true,
     },
     qualifications: {
       type: [qualificationSchema],
