@@ -18,7 +18,7 @@ interface IDisplayCardInfo {
 const DoctorDisplayCard = ({ name, speciality, qualifications, image,availability }: IDisplayCardInfo) => {
   return (
     <div className="bg-blue-100 w-full rounded-2xl shadow-lg p-6 lg:p-7 flex flex-col items-center text-center relative">
-         <div className="absolute top-4 right-4 flex items-center gap-2 bg-white px-3 py-1 rounded-full shadow-md">
+        <div className="absolute top-0 right-0 mt-4 mr-4 z-10 flex items-center gap-2 bg-white px-3 py-1 rounded-full shadow-md">
         <span
           className={`w-3 h-3 rounded-full ${
             availability ? 'bg-green-500 animate-[ping_2s_linear_2s_infinite]' : 'bg-red-700'
@@ -28,7 +28,7 @@ const DoctorDisplayCard = ({ name, speciality, qualifications, image,availabilit
           {availability ? 'Available' : 'Unavailable'}
         </span>
       </div>
-      <div className="w-36 h-36 sm:w-40 sm:h-40 lg:w-50 lg:h-50 rounded-full overflow-hidden border-4 border-blue-200 mb-5">
+      <div className="w-36 h-36 sm:w-40 sm:h-40 mt-6 lg:w-50 lg:h-50 rounded-full overflow-hidden border-4 border-blue-200 mb-5">
         <Image
           src={image}
           alt={name}
