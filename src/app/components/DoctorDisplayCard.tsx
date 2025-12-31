@@ -1,5 +1,7 @@
 import { BookCheck } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 type qualificationType = {
@@ -12,10 +14,13 @@ interface IDisplayCardInfo {
   name: string;
   speciality: string;
   qualifications: qualificationType[];
+  slug:string;
   image: string;
   availability:boolean;
 }
-const DoctorDisplayCard = ({ name, speciality, qualifications, image,availability }: IDisplayCardInfo) => {
+const DoctorDisplayCard = ({ name, speciality, qualifications, image,availability,slug }: IDisplayCardInfo) => {
+
+
   return (
     <div className="bg-blue-100 w-full rounded-2xl shadow-lg p-6 lg:p-7 flex flex-col items-center text-center relative">
         <div className="absolute top-0 right-0 mt-4 mr-4 z-10 flex items-center gap-2 bg-white px-3 py-1 rounded-full shadow-md">
@@ -55,9 +60,9 @@ const DoctorDisplayCard = ({ name, speciality, qualifications, image,availabilit
       </div>
 
       <div className="flex flex-col gap-3 w-full mt-auto">
-        <button className="cursor-pointer w-full sm:flex-1 px-5 py-2.5 break text-sm lg:text-base bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 transition">
+        <Link href={`/doctors/${slug}`} className="cursor-pointer w-full sm:flex-1 px-5 py-2.5 break text-sm lg:text-base bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 transition">
           View Doctor
-        </button>
+        </Link>
 
         <button className="cursor-pointer w-full sm:flex-1 flex items-center whitespace-nowrap justify-center gap-2 px-5 py-2.5 text-sm lg:text-base bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 transition">
           <BookCheck size={18} />

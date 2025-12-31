@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import slugify from "slugify";
 
 type qualification = {
   degree: string;
@@ -11,6 +12,7 @@ interface IDoctor {
   image: string;
   email: string;
   phone: string;
+  slug:string;
   role: "doctor";
   speciality: string;
   availability:boolean;
@@ -100,6 +102,12 @@ const doctorSchema = new mongoose.Schema<IDoctor>(
         "Vascular Surgery",
       ],
     },
+     slug: {
+      type: String,
+      required:true,
+      unique: true,
+      index: true,
+    },
     image: {
       type: String,
       required: true,
@@ -109,6 +117,36 @@ const doctorSchema = new mongoose.Schema<IDoctor>(
     timestamps: true,
   }
 );
+
+doctorSchema.pre("save", async function () {
+
+  if (!this.isModified("name") && !this.isModified("speciality")) {
+    return;
+  }
+
+  const baseSlug = slugify(
+    `${this.name}-${this.speciality}`,
+    {
+      lower: true,
+      strict: true,
+    }
+  );
+
+  let slug = baseSlug;
+  let counter = 1;
+
+while (
+  await mongoose.models.Doctor.findOne({
+    slug,
+    _id: { $ne: this._id },
+  })
+) {
+  slug = `${baseSlug}-${counter}`;
+  counter++;
+};
+this.slug = slug
+});
+
 
 export const Doctor =
   mongoose.models.Doctor || mongoose.model<IDoctor>("Doctor", doctorSchema);
