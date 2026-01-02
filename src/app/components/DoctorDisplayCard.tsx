@@ -1,24 +1,11 @@
+import { IDoctor } from '@/types/doctor';
 import { BookCheck } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import React from 'react';
 
-type qualificationType = {
-  _id: string;
-  degree: string;
-  institution: string;
-};
 
-interface IDisplayCardInfo {
-  name: string;
-  speciality: string;
-  qualifications: qualificationType[];
-  slug:string;
-  image: string;
-  availability:boolean;
-}
-const DoctorDisplayCard = ({ name, speciality, qualifications, image,availability,slug }: IDisplayCardInfo) => {
+const DoctorDisplayCard = ({ name, speciality, qualifications, image,availability,slug }: IDoctor) => {
 
 
   return (
@@ -33,7 +20,7 @@ const DoctorDisplayCard = ({ name, speciality, qualifications, image,availabilit
           {availability ? 'Available' : 'Unavailable'}
         </span>
       </div>
-      <div className="w-36 h-36 sm:w-40 sm:h-40 mt-6 lg:w-50 lg:h-50 rounded-full overflow-hidden border-4 border-blue-200 mb-5">
+      <div className="w-36 h-36 sm:w-40 sm:h-40 mt-6 lg:w-50 lg:h-50 rounded-full overflow-hidden border-4 border-blue-400 mb-5">
         <Image
           src={image}
           alt={name}

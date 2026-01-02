@@ -12,7 +12,7 @@ interface IDoctor {
   image: string;
   email: string;
   phone: string;
-  slug:string;
+  slug?:string;
   role: "doctor";
   speciality: string;
   availability:boolean;
@@ -104,7 +104,6 @@ const doctorSchema = new mongoose.Schema<IDoctor>(
     },
      slug: {
       type: String,
-      required:true,
       unique: true,
       index: true,
     },

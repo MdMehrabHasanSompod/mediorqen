@@ -48,61 +48,86 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-5">
-      <div className="w-full max-w-sm bg-white rounded-xl shadow-lg p-5">
+    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 py-8">
+      <div className="w-full max-w-md sm:max-w-lg md:max-w-xl bg-white rounded-xl shadow-lg p-6 sm:p-8">
         <Link
           href="/"
-          className="flex items-center gap-1 text-xs text-gray-600 hover:text-blue-600 mb-3"
+          className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 mb-4 sm:mb-6"
         >
-          <ArrowLeft size={16} />
-          Back
+          <ArrowLeft size={18} />
+          Back to Home
         </Link>
-        <h1 className="text-lg font-semibold text-gray-800 text-center mb-4">
+        
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 text-center mb-6">
           Create Account
         </h1>
-        <form className="space-y-3" onSubmit={submitHandler}>
-          <input
-            type="text"
-            placeholder="Full Name"
-            className="form-input"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
+        
+        <form className="space-y-4" onSubmit={submitHandler}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <input
+                type="text"
+                placeholder="Full Name"
+                className="form-input"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
 
-          <input
-            type="email"
-            placeholder="Email"
-            className="form-input"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+            <div>
+              <input
+                type="email"
+                placeholder="Email"
+                className="form-input"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+          </div>
 
-          <input
-            type="tel"
-            placeholder="Phone"
-            className="form-input"
-            value={phone}
-            minLength={11}
-            maxLength={13}
-            onChange={(e) => setPhone(e.target.value)}
-            onInvalid={(e: React.InvalidEvent<HTMLInputElement>) =>
-              e.target.setCustomValidity(
-                "Phone number must contain 11 to 13 characters"
-              )
-            }
-            onInput={(e: React.FormEvent<HTMLInputElement>) =>
-              (e.target as HTMLInputElement).setCustomValidity("")
-            }
-            required
-          />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <input
+                type="tel"
+                placeholder="Phone Number"
+                className="form-input"
+                value={phone}
+                minLength={11}
+                maxLength={13}
+                onChange={(e) => setPhone(e.target.value)}
+                onInvalid={(e: React.InvalidEvent<HTMLInputElement>) =>
+                  e.target.setCustomValidity(
+                    "Phone number must contain 11 to 13 characters"
+                  )
+                }
+                onInput={(e: React.FormEvent<HTMLInputElement>) =>
+                  (e.target as HTMLInputElement).setCustomValidity("")
+                }
+                required
+              />
+            </div>
+
+            <div>
+              <input
+                type="number"
+                placeholder="Age"
+                min={1}
+                max={150}
+                className="form-input"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+                required
+              />
+            </div>
+          </div>
 
           <div className="relative">
             <input
               type={showPass ? "text" : "password"}
               placeholder="Password"
-              className="form-input pr-10"
+              className="form-input"
               pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,24}$"
               required
               value={password}
@@ -135,61 +160,52 @@ const Register = () => {
             <button
               type="button"
               onClick={() => setShowPass((prev) => !prev)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
             >
-              {showPass ? <EyeOff size={24} /> : <Eye size={24} />}
+              {showPass ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
 
-          <input
-            type="number"
-            placeholder="Age"
-            min={1}
-            max={150}
-            className="form-input"
-            value={age}
-            onChange={(e) => setAge(e.target.value)}
-            required
-          />
-
-          <label className="flex items-start gap-2 text-xs text-gray-600">
-            <input type="checkbox" className="mt-1" required />I agree to the
-            Terms & Privacy Policy
+          <label className="flex items-start gap-3 text-sm text-gray-600">
+            <input type="checkbox" className="mt-0.5 cursor-pointer" required />
+            <span>I agree to the Terms & Privacy Policy</span>
           </label>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 cursor-pointer flex items-center justify-center gap-2 text-white text-xs font-medium py-2 rounded-lg transition"
+            className="w-full bg-blue-600 cursor-pointer hover:bg-blue-700 flex items-center justify-center gap-3 text-white font-medium py-3 px-4 rounded-lg transition text-sm sm:text-base"
           >
-            {" "}
-            {loading && <Loader2 size={16} className="animate-spin" />}
+            {loading && <Loader2 size={20} className="animate-spin" />}
             Create Account
           </button>
         </form>
 
-        <div className="flex items-center gap-2 my-4">
+        <div className="flex items-center gap-3 my-6">
           <div className="flex-1 h-px bg-gray-200" />
-          <span className="text-xs text-gray-400">OR</span>
+          <span className="text-sm text-gray-400">OR</span>
           <div className="flex-1 h-px bg-gray-200" />
         </div>
 
         <button
-          type="submit"
-          className="w-full flex items-center justify-center gap-3 border border-gray-300 py-2 rounded-lg hover:bg-gray-50 transition"
+          type="button"
           onClick={()=>signIn("google")}
+          className="w-full flex items-center cursor-pointer justify-center gap-4 border border-gray-300 py-3 px-4 rounded-lg hover:bg-gray-50 transition"
         >
-          <Image src="/google.png" alt="Google" width={24} height={24} />
-          <span className="text-xs font-medium text-gray-700 cursor-pointer">
+          <Image src="/google.png" alt="Google" width={22} height={22} />
+          <span className="text-sm font-medium text-gray-700">
             Continue with Google
           </span>
         </button>
 
-        <p className="text-center text-xs text-gray-500 mt-4">
+        <p className="text-center text-sm text-gray-500 mt-6">
           Already have an account?{" "}
-          <span onClick={()=>router.push("/login")} className="text-blue-600 font-medium cursor-pointer hover:underline">
+          <button 
+            onClick={()=>router.push("/login")}
+            className="text-blue-600 cursor-pointer font-medium hover:underline focus:outline-none"
+          >
             Login
-          </span>
+          </button>
         </p>
       </div>
     </div>

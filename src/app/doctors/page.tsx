@@ -1,31 +1,12 @@
 import React from 'react'
 import Link from 'next/link';
 import { ArrowLeft} from 'lucide-react';
-import connectDB from '../lib/db';
-import { Doctor } from '../models/doctor.model';
 import DisplayDoctors from '../components/DisplayDoctors';
-
-type qualificationType = {
-  _id: string;
-  degree: string;
-  institution: string;
-};
-
-interface IDisplayCardInfo{
-    _id: string
-    name: string;
-    speciality: string;
-    qualifications: qualificationType[];
-    slug:string;
-    image: string;
-    availability:boolean;
-}
+import { getDoctors } from '../lib/getDoctors';
 
 const Doctors = async() => {
-    await connectDB();
-    const  Doctors:IDisplayCardInfo[] = await Doctor.find({}).select("name speciality qualifications slug image availability fees").lean();
-    
-    const plainDoctors = Doctors.map(doc => ({
+    const doctors = await getDoctors();
+    const plainDoctors = doctors.map(doc => ({
     ...doc,
     _id: doc._id.toString(),
      qualifications: doc.qualifications.map(q => ({

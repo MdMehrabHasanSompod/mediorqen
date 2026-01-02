@@ -24,7 +24,7 @@ const ResponsiveSearch = ({ searchTerm, setSearchTerm, placeholderText }: ISearc
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder={placeholderText}
-          className="w-full pl-10 pr-6 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 bg-blue-100"
+          className="w-full pl-10 pr-6 py-2 border text-xs md:text-sm border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 bg-blue-100"
         />
        
       </div>

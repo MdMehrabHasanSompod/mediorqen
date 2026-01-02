@@ -3,36 +3,21 @@ import React, { useState, useEffect  } from 'react'
 import DoctorDisplayCard from './DoctorDisplayCard';
 import ResponsiveSearch from './ResponsiveSearch';
 import { Loader2 } from 'lucide-react';
-
-
-type qualificationType = {
-  _id: string;
-  degree: string;
-  institution: string;
-};
-
-interface IDisplayCardInfo{
-    _id: string
-    name: string;
-    speciality: string;
-    qualifications: qualificationType[];
-    slug:string;
-    image: string;
-    availability:boolean;
-}
+import { IDoctor } from '@/types/doctor';
+import { useDoctorStore } from '@/src/store/doctor.store';
 
 interface IDisplayCardInfoProps {
-  plainDoctors: IDisplayCardInfo[];
+  plainDoctors: IDoctor[];
 }
 
-
 const DisplayDoctors = ({plainDoctors=[]}:IDisplayCardInfoProps) => {
-    const [doctors,setDoctors] = useState<IDisplayCardInfo[]>(plainDoctors)
-    const [loading,setLoading] = useState(false)
+  const setDoctors = useDoctorStore((s) => s.setDoctors);
+  const storedDoctors = useDoctorStore((s) => s.doctors);
+  const [loading,setLoading] = useState(true)
     const [currentPage, setCurrentPage] = useState(1)
     const [searchTerm, setSearchTerm] = useState("")
      const perPage = 5;
-    const filteredDoctors = doctors.filter((doctor) => {
+    const filteredDoctors = storedDoctors.filter((doctor) => {
       const term = searchTerm.toLowerCase().trim();
       if (!term) return true;
       const nameWords = doctor.name.toLowerCase().trim().split(/\s+/);
@@ -44,6 +29,11 @@ const DisplayDoctors = ({plainDoctors=[]}:IDisplayCardInfoProps) => {
     });
         const totalPages = Math.ceil(filteredDoctors.length / perPage)
         const currentDoctors = filteredDoctors.slice((currentPage-1)*perPage, currentPage*perPage)
+
+    useEffect(() => {
+    setDoctors(plainDoctors);
+    Promise.resolve().then(()=>setLoading(false))
+}, [plainDoctors, setDoctors]);
              
 const handleSearch = (value:React.SetStateAction<string>) => {
   setSearchTerm(value);
@@ -60,7 +50,7 @@ useEffect(() => {
     <ResponsiveSearch searchTerm={searchTerm} setSearchTerm={handleSearch} placeholderText='Search doctor by name or speciality...' />
     {loading ? (
       <div className="fixed inset-0 flex items-center justify-center bg-white/70 z-50">
-        <div className="flex items-center gap-3 text-gray-600 text-base md:text-lg font-semibold">
+        <div className="flex items-center  gap-3 text-gray-600 text-base md:text-lg font-semibold">
           <Loader2 size={26} className="animate-spin text-blue-500" />
           Loading doctors...
         </div>
@@ -68,7 +58,9 @@ useEffect(() => {
     ) : (
       <>
         {filteredDoctors.length === 0 ? (
-          <p className="text-center text-gray-500 text-lg mt-10">No doctors found.</p>
+        <div className="flex items-center justify-center  gap-3 text-gray-600 text-base md:text-lg font-semibold">
+           <p className="text-center text-gray-500 mt-50 text-lg">No doctors found.</p>
+        </div>
         ) :  (
       <>
         <div className="
@@ -108,7 +100,7 @@ useEffect(() => {
             <button
               disabled={currentPage === totalPages}
               onClick={() => setCurrentPage((prev) => prev + 1)}
-              className="
+              className=" 
                 px-5 py-2 
                 text-sm md:text-base 
                 bg-blue-500 text-white 

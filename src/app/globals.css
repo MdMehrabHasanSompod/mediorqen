@@ -13,22 +13,18 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 .form-input {
-  @apply w-full px-4 py-2 rounded-lg border border-gray-300 text-xs
-  focus:outline-none focus:ring-2 focus:ring-blue-500;
+  @apply w-full px-4 py-3 pr-12 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition text-sm sm:text-base
 }
 
 .form-select {
-  @apply w-full px-4 py-2 appearance-none rounded-lg border border-gray-300 text-xs bg-white
-  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-  transition cursor-pointer;
+  @apply w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition text-sm sm:text-base cursor-pointer bg-white
 }
 
 .select-option {
-  @apply text-xs text-gray-800 bg-blue-50;
+  @apply text-sm text-gray-800 py-2 px-3
 }
 
 .select-option:checked {
-  @apply text-white bg-blue-500 
+  @apply text-white bg-blue-600
 }
-
 
