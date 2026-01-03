@@ -43,6 +43,13 @@ export const POST = async (request: NextRequest) => {
       );
     }
 
+      if (appointment.paymentStatus !== "Unpaid") {
+       return NextResponse.json(
+        { success: false, message: "Invalid payment attempt" },
+        { status: 400 }
+       );
+      }  
+
     appointment.paymentMethod = paymentMethod;
    if (paymentMethod === "Cash") {
     appointment.expiresAt = undefined; 

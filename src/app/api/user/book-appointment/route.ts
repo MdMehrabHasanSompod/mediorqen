@@ -1,3 +1,4 @@
+import { auth } from "@/src/app/lib/auth";
 import connectDB from "@/src/app/lib/db";
 import { Appointment } from "@/src/app/models/appointment.model";
 import { NextRequest, NextResponse } from "next/server";
@@ -12,6 +13,14 @@ export const POST = async(request:NextRequest) => {
         { status: 400 }
       );
     }
+
+      const session = await auth();
+        if (!session?.user?.id) {
+          return NextResponse.json(
+            { success: false, message: "Attempted to Unauthorized Access"},
+            { status: 401 }
+          );
+        }
 
       const feesNumber = Number(appointmentFees);
          if (isNaN(feesNumber)) {
@@ -49,7 +58,7 @@ export const POST = async(request:NextRequest) => {
     return NextResponse.json({
      success:true,message:"Appointment Booked Successfully",
      appointmentId: newAppointment._id,
-    expiresAt: newAppointment.expiresAt,
+     expiresAt: newAppointment.expiresAt,
     },{status:200})
 
   } catch (error) {

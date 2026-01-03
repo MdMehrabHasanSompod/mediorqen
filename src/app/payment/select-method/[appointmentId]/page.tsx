@@ -1,32 +1,31 @@
-"use client";
+import { redirect } from "next/navigation";
+import { auth } from "@/src/app/lib/auth";
+import connectDB from "@/src/app/lib/db";
+import { Appointment } from "@/src/app/models/appointment.model";
+import PaymentMethodClient from "@/src/app/components/PaymentMethodClient";
 
-import { useRouter, useParams } from "next/navigation";
-import axios from "axios";
 
-export default function PaymentMethodPage() {
-  const router = useRouter();
-  const { appointmentId } = useParams();
+ const Page = async(props: { params: { appointmentId: string } }) => {
+  const params= await props.params;
+  const appointmentId = params.appointmentId;
+    if(!appointmentId) redirect("/")
+  const session = await auth();
+  if (!session) redirect("/login");
 
-  const payOnline = async () => {
-    await axios.post("/api/payment/select-method", {
-      appointmentId,
-      paymentMethod: "Online",
-    });
-    router.push(`/payment/${appointmentId}`);
-  };
+  await connectDB();
 
-  const payAtHospital = async () => {
-    await axios.post("/api/payment/select-method", {
-      appointmentId,
-      paymentMethod: "Cash",
-    });
-   router.push(`/user/booking-success?appointmentId=${appointmentId}&appointmentType=Physical`);
-  };
+  const appointment = await Appointment.findById(appointmentId);
+  if (!appointment) redirect("/");
 
-  return (
-    <div className="space-y-4">
-      <button onClick={payOnline}>Pay Online</button>
-      <button onClick={payAtHospital}>Pay at Hospital</button>
-    </div>
-  );
+  if (appointment.patientId.toString() !== session.user.id) {
+    redirect("/user/appointments");
+  }
+
+  if (appointment.paymentStatus !== "Unpaid") {
+    redirect("/uses/appointments"); 
+  }
+
+  return <PaymentMethodClient appointmentId={appointmentId} />;
 }
+
+export default Page;

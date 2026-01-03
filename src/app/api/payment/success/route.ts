@@ -38,6 +38,20 @@ export const POST = async (req: NextRequest) => {
           );
         }
 
+     if (appointment.paymentStatus !== "Unpaid") {
+       return NextResponse.json(
+        { success: false, message: "Invalid payment attempt" },
+        { status: 400 }
+       );
+      } 
+      
+     if (appointment.paymentMethod !== "Online") {
+       return NextResponse.json(
+        { success: false, message: "Invalid Payment Method" },
+        { status: 400 }
+       );
+      }  
+
      appointment.paymentStatus = "Paid";
      appointment.status= "Confirmed";
      appointment.expiresAt = undefined;
@@ -45,7 +59,7 @@ export const POST = async (req: NextRequest) => {
      await appointment.save();
 
   
-  return NextResponse.json({ success: true,message:"Payment Completed Successfully",appointmentType: appointment.appointmentType },{status:200});
+  return NextResponse.json({ success: true,message:"Payment Completed Successfully"},{status:200});
   } catch (error) {
     return NextResponse.json({ success:false, message:"Internal Server Error" },{status:500});
   }

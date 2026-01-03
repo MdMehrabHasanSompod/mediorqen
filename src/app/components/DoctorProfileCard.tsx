@@ -1,3 +1,4 @@
+"use client"
 import { IDoctor } from "@/types/doctor";
 import axios from "axios";
 import {
@@ -7,6 +8,7 @@ import {
   Video,
   Hospital,
   ChevronDown,
+  Loader2,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -25,15 +27,7 @@ const timeSlots = Array.from({ length: 16 }).map((_, i) => {
   return `${hour}:${min}`;
 });
 
-const DoctorProfileCard = ({
-  _id,
-  fees,
-  name,
-  speciality,
-  qualifications,
-  image,
-  availability,
-}: IDoctor) => {
+const DoctorProfileCard = ({_id,fees,name,speciality,qualifications,image,availability}: IDoctor) => {
   const [showBooking, setShowBooking] = useState(false);
   const [appointmentType, setAppointmentType] = useState<"Physical" | "Online" | null>(null);
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
@@ -41,29 +35,19 @@ const DoctorProfileCard = ({
   const canBook = appointmentType !== null && selectedDay !== null && selectedSlot !== null;
   const {data:session,status} = useSession()
   const router = useRouter()
+  const [loading,setLoading] = useState(false)
  
   const bookAppointment = async() => {
-    if (status !== "authenticated") {
-     alert("Please login first");
-     return;
+    try {
+      setLoading(true)
+       if (status !== "authenticated"||!session?.user?.id) {
+        alert("User not authenticated. Please login first");
+        return;
 }
-  if (!session?.user?.id) {
-    alert("User not authenticated");
-    return;
-  }
     if (selectedDay === null || selectedSlot === null || !appointmentType) {
     return;
   }
   const date = days[selectedDay].toISOString();
-    try {
-      console.log({
-  doctorId: _id,
-  patientId: session?.user?.id,
-  date,
-  slot: selectedSlot,
-  appointmentType,
-  appointmentFees: fees,
-});
 
       const result = await axios.post("/api/user/book-appointment",{
         doctorId:_id,
@@ -73,7 +57,7 @@ const DoctorProfileCard = ({
         appointmentType,
         appointmentFees:fees
       })
-
+      setLoading(false)
       const { appointmentId} = result.data;
       if (appointmentType === "Online") {
        router.push(`/payment/${appointmentId}`);
@@ -82,6 +66,7 @@ const DoctorProfileCard = ({
       }
      } catch (error) {
       console.log(error);
+      setLoading(false)
      }
   }
 
@@ -124,7 +109,7 @@ const DoctorProfileCard = ({
             <span className="font-semibold text-gray-600">
               Speciality:
             </span>{" "}
-            <span className="text-blue-600 font-medium">
+            <span className="text-blue-700 font-medium">
               {speciality}
             </span>
           </p>
@@ -139,6 +124,14 @@ const DoctorProfileCard = ({
               </p>
             ))}
           </div>
+            <p className="text-sm sm:text-base">
+            <span className="font-semibold text-gray-600">
+              Appointment Fees:
+            </span>{" "}
+            <span className="text-blue-600 font-medium">
+              $&nbsp;{fees}
+            </span>
+          </p>
         </div>
       </div>
       <button
@@ -243,8 +236,12 @@ const DoctorProfileCard = ({
                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
             }`}
           >
-            <BookCheck size={18} />
+            {loading?<Loader2 className="w-6 h-6 animate-spin"/>:
+            <>
+             <BookCheck size={18} />
             Book Now
+            </>
+           }
           </button>
         </div>
       )}
