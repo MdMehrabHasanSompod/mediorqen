@@ -26,7 +26,7 @@ const Page = async(props: { params: { appointmentId: string } }) => {
     redirect("/user/appointments");
   }
 
-  if(!appointment.paymentMethod){
+  if(appointment.appointmentType === "Physical" && !appointment.paymentMethod){
     redirect(`/payment/select-method/${appointmentId}`);
   }
 

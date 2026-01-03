@@ -45,13 +45,14 @@ export const POST = async (req: NextRequest) => {
        );
       } 
       
-     if (appointment.paymentMethod !== "Online") {
+     if (appointment.appointmentType === "Physical" && appointment.paymentMethod !== "Online") {
        return NextResponse.json(
         { success: false, message: "Invalid Payment Method" },
         { status: 400 }
        );
       }  
-
+     
+     appointment.paymentMethod = "Online"
      appointment.paymentStatus = "Paid";
      appointment.status= "Confirmed";
      appointment.expiresAt = undefined;
