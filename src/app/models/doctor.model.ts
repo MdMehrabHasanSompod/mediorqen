@@ -48,6 +48,10 @@ const doctorSchema = new mongoose.Schema<IDoctor>(
       trim: true,
       match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Please enter a valid email"],
     },
+    fees:{
+     type:Number,
+     required:true,
+    },
     phone: {
       type: String,
       match: [/^\+?01[3-9]\d{8}$/, "Please enter a valid phone number"],

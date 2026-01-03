@@ -19,7 +19,7 @@ export default async function proxy(request: NextRequest) {
     "doctor":["/doctor"],
   };
   const apiRoutes: Record<string, string[]> = {
-    "user": ["/api/user"],
+    "user": ["/api/user","/api/payment"],
     "admin": ["/api/admin"],
     "super-admin": ["/api/super-admin"],
     "doctor":["/api/doctor"],

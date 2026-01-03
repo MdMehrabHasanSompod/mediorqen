@@ -1,0 +1,14 @@
+export interface IAppointment {
+  _id: string;
+  doctorId: string;
+  patientId: string;
+  date: Date;
+  slot: `${number}:${"00" | "30"}`;
+  appointmentType: "Physical" | "Online";
+  appointmentFees: number;
+  paymentMethod: "Online" | "Cash";
+  paymentStatus: "Unpaid" | "Paid";
+  meetingRoomId?: string;
+  status: "Pending" | "Awaiting Payment" | "Confirmed" | "Cancelled" | "Completed";
+  expiresAt: Date;
+}

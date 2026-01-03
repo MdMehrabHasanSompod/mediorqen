@@ -1,4 +1,5 @@
 import { IDoctor } from "@/types/doctor";
+import axios from "axios";
 import {
   BookCheck,
   CalendarDays,
@@ -7,7 +8,9 @@ import {
   Hospital,
   ChevronDown,
 } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 const days = Array.from({ length: 7 }).map((_, i) => {
@@ -23,6 +26,8 @@ const timeSlots = Array.from({ length: 16 }).map((_, i) => {
 });
 
 const DoctorProfileCard = ({
+  _id,
+  fees,
   name,
   speciality,
   qualifications,
@@ -30,10 +35,56 @@ const DoctorProfileCard = ({
   availability,
 }: IDoctor) => {
   const [showBooking, setShowBooking] = useState(false);
-  const [appointmentType, setAppointmentType] = useState<"physical" | "online" | null>(null);
+  const [appointmentType, setAppointmentType] = useState<"Physical" | "Online" | null>(null);
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
-  const canBook = appointmentType && selectedDay && selectedSlot  !== null ;
+  const canBook = appointmentType !== null && selectedDay !== null && selectedSlot !== null;
+  const {data:session,status} = useSession()
+  const router = useRouter()
+ 
+  const bookAppointment = async() => {
+    if (status !== "authenticated") {
+     alert("Please login first");
+     return;
+}
+  if (!session?.user?.id) {
+    alert("User not authenticated");
+    return;
+  }
+    if (selectedDay === null || selectedSlot === null || !appointmentType) {
+    return;
+  }
+  const date = days[selectedDay].toISOString();
+    try {
+      console.log({
+  doctorId: _id,
+  patientId: session?.user?.id,
+  date,
+  slot: selectedSlot,
+  appointmentType,
+  appointmentFees: fees,
+});
+
+      const result = await axios.post("/api/user/book-appointment",{
+        doctorId:_id,
+        patientId: session.user.id ,
+        date,
+        slot:selectedSlot,
+        appointmentType,
+        appointmentFees:fees
+      })
+
+      const { appointmentId} = result.data;
+      if (appointmentType === "Online") {
+       router.push(`/payment/${appointmentId}`);
+      } else {
+       router.push(`/payment/select-method/${appointmentId}`);
+      }
+     } catch (error) {
+      console.log(error);
+     }
+  }
+
 
   return (
     <div className="w-full max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-6 sm:p-8 space-y-8">
@@ -116,9 +167,9 @@ const DoctorProfileCard = ({
             </p>
             <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
               <button
-                onClick={() => setAppointmentType("physical")}
+                onClick={() => setAppointmentType("Physical")}
                 className={`flex-1 py-3 rounded-xl border-2 border-blue-300 flex items-center justify-center gap-2 transition ${
-                  appointmentType === "physical"
+                  appointmentType === "Physical"
                     ? "bg-blue-600 text-white border-blue-600"
                     : "bg-white hover:border-blue-500"
                 }`}
@@ -127,9 +178,9 @@ const DoctorProfileCard = ({
               </button>
 
               <button
-                onClick={() => setAppointmentType("online")}
+                onClick={() => setAppointmentType("Online")}
                 className={`flex-1 py-3 rounded-xl border-2 border-blue-300 flex items-center justify-center gap-2 transition ${
-                  appointmentType === "online"
+                  appointmentType === "Online"
                     ? "bg-blue-600 text-white border-blue-600"
                     : "bg-white hover:border-blue-500"
                 }`}
@@ -144,12 +195,12 @@ const DoctorProfileCard = ({
               <CalendarDays size={16} /> Select Day
             </p>
             <div className="grid grid-cols-4 sm:grid-cols-7 gap-2 max-w-xl mx-auto">
-              {days.map((day, idx) => (
+              {days.map((day, index) => (
                 <button
-                  key={idx}
-                  onClick={() => setSelectedDay(idx)}
+                  key={index}
+                  onClick={() => setSelectedDay(index)}
                   className={`px-2 py-3 rounded-lg border-2 border-blue-300 transition ${
-                    selectedDay === idx
+                    selectedDay === index
                       ? "bg-blue-600 text-white border-blue-600"
                       : "bg-white hover:border-blue-500"
                   }`}
@@ -185,6 +236,7 @@ const DoctorProfileCard = ({
           </div>
           <button
             disabled={!canBook}
+            onClick={()=>bookAppointment()}
             className={`w-full md:w-auto md:max-w-md mx-auto py-3 px-8 cursor-pointer rounded-xl font-semibold flex items-center justify-center gap-2 transition ${
               canBook
                 ? "bg-blue-600 text-white hover:bg-blue-700"

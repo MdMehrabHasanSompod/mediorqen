@@ -2,7 +2,7 @@ import React from 'react'
 import Link from 'next/link';
 import { ArrowLeft} from 'lucide-react';
 import DisplayDoctors from '../components/DisplayDoctors';
-import { getDoctors } from '../lib/getDoctors';
+import { getDoctors } from '../utils/getDoctors';
 
 const Doctors = async() => {
     const doctors = await getDoctors();

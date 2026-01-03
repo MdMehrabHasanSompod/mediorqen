@@ -2,7 +2,7 @@
 import React, { useEffect, useMemo } from "react";
 import { useParams } from "next/navigation";
 import { useDoctorStore } from "@/src/store/doctor.store";
-import { getDoctors } from "../../lib/getDoctors";
+import { getDoctors } from "../../utils/getDoctors";
 import DoctorProfileCard from "../../components/DoctorProfileCard";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import DoctorDisplayCard from "../../components/DoctorDisplayCard";
