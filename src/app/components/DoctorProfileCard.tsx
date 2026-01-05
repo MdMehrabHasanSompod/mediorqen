@@ -21,13 +21,8 @@ const days = Array.from({ length: 7 }).map((_, i) => {
   return d;
 });
 
-const timeSlots = Array.from({ length: 16 }).map((_, i) => {
-  const hour = 9 + Math.floor(i / 2);
-  const min = i % 2 === 0 ? "00" : "30";
-  return `${hour}:${min}`;
-});
-
 const DoctorProfileCard = ({_id,fees,name,speciality,qualifications,image,availability}: IDoctor) => {
+  const [availableSlots,setAvailableSlots] = useState<string[]>([])
   const [showBooking, setShowBooking] = useState(false);
   const [appointmentType, setAppointmentType] = useState<"Physical" | "Online" | null>(null);
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
@@ -35,7 +30,29 @@ const DoctorProfileCard = ({_id,fees,name,speciality,qualifications,image,availa
   const canBook = appointmentType !== null && selectedDay !== null && selectedSlot !== null;
   const {data:session,status} = useSession()
   const router = useRouter()
-  const [loading,setLoading] = useState(false)
+  const [loading,setLoading] = useState<boolean>(false)
+  const [slotLoading,setSlotLoading] = useState<boolean>(false)
+
+  const getAvailableSlots = async(index:number) => {
+     try {
+      setSlotLoading(true)
+      setSelectedDay(index);   
+      setSelectedSlot(null);  
+      setAvailableSlots([])
+      const date = days[index].toISOString();
+      const result = await axios.get("/api/doctors/doctor/available-slots",{
+        params:{
+          doctorId:_id,
+          date,
+        }
+      })
+      setSlotLoading(false)
+      setAvailableSlots(result.data.availableSlots)
+     } catch (error) {
+        console.log(error);
+        setSlotLoading(false)
+     }
+  }
  
   const bookAppointment = async() => {
     try {
@@ -191,7 +208,8 @@ const DoctorProfileCard = ({_id,fees,name,speciality,qualifications,image,availa
               {days.map((day, index) => (
                 <button
                   key={index}
-                  onClick={() => setSelectedDay(index)}
+                  onClick={() => getAvailableSlots(index)
+                  }
                   className={`px-2 py-3 rounded-lg border-2 border-blue-300 transition ${
                     selectedDay === index
                       ? "bg-blue-600 text-white border-blue-600"
@@ -211,8 +229,25 @@ const DoctorProfileCard = ({_id,fees,name,speciality,qualifications,image,availa
             <p className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
               <Clock size={16} /> Time Slots (30 min)
             </p>
+             {selectedDay === null && (
+            <div className="min-h-46 md:min-h-22 text-center text-gray-500 py-6 border-2 border-blue-600 border-dashed rounded-xl ">
+            Please select a date to see available slots
+           </div>
+               )}
+            {selectedDay !== null && slotLoading && (
+            <div className="min-h-46 md:min-h-22 flex items-center justify-center gap-2 py-6 text-blue-600">
+            <Loader2 className="w-5 h-5 animate-spin" />
+            <span>Loading available slots...</span>
+           </div>
+           )}
+            {selectedDay !== null && !slotLoading && availableSlots.length === 0 && (
+           <div className="min-h-46 md:min-h-22 flex items-center justify-center text-center text-red-500 py-6">
+            No slots available for this date
+          </div>
+           )}
+            {!slotLoading && availableSlots.length > 0 && (
             <div className="grid grid-cols-4 sm:grid-cols-8 gap-2 max-w-3xl mx-auto">
-              {timeSlots.map((slot) => (
+              {availableSlots.map((slot) => (
                 <button
                   key={slot}
                   onClick={() => setSelectedSlot(slot)}
@@ -226,6 +261,7 @@ const DoctorProfileCard = ({_id,fees,name,speciality,qualifications,image,availa
                 </button>
               ))}
             </div>
+            )}
           </div>
           <button
             disabled={!canBook}
