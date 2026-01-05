@@ -230,7 +230,7 @@ const DoctorProfileCard = ({_id,fees,name,speciality,qualifications,image,availa
               <Clock size={16} /> Time Slots (30 min)
             </p>
              {selectedDay === null && (
-            <div className="min-h-46 md:min-h-22 text-center text-gray-500 py-6 border-2 border-blue-600 border-dashed rounded-xl ">
+            <div className="min-h-46 md:min-h-22 text-center flex items-center justify-center text-gray-500 py-6 border-2 border-blue-600 border-dashed rounded-xl ">
             Please select a date to see available slots
            </div>
                )}
