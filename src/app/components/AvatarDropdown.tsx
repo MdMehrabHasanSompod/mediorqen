@@ -31,7 +31,7 @@ export default function AvatarDropdown({ user }:{user:IUser}) {
     <div className="relative inline-block text-left" ref={dropdownRef}>
       <button
         onClick={() => setOpen(!open)}
-        className="w-10 h-10 rounded-full cursor-pointer overflow-hidden border border-gray-300 flex items-center justify-center"
+        className="w-10 h-10 rounded-full cursor-pointer overflow-hidden border-2 border-gray-300 flex items-center justify-center"
       >
               {user.image ? (
                     <Image
@@ -41,7 +41,7 @@ export default function AvatarDropdown({ user }:{user:IUser}) {
                     height={40}
                      className="rounded-full"
                     />
-                  ) : ( <User className="w-6 h-6 rounded-full bg-white text-blue-600"/>)}
+                  ) : ( <User className="w-10 h-10 rounded-full bg-white text-blue-600"/>)}
       </button>
 
       {open && (
