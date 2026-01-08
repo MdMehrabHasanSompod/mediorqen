@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${poppins.variable} ${inter.variable} antialiased`}>
       <body
-        className="bg-blue-200 h-screen w-full"
+        className="bg-linear-to-br from-blue-50 to-blue-200 w-full"
       >
         <SessionWrapper>
           {children}

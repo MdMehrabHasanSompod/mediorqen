@@ -1,12 +1,14 @@
+"use client"
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import {motion} from "motion/react"
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen bg-linear-to-br from-blue-50 to-blue-200 flex items-center">
-      <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <div className="block lg:hidden mt-10">
+    <section className="relative min-h-screen flex items-center">
+      <div className="container  mt-20 mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="block lg:hidden">
           <Image
             src="/heroSectionDoctor1.png"
             alt="Doctor"
@@ -46,7 +48,14 @@ const HeroSection = () => {
 
         <div className="relative hidden lg:flex items-center justify-center min-h-105 xl:min-h-120">
 
-          <div className="
+          <motion.div
+               animate={{ y: [0, -5, 0] }}
+      transition={{
+        duration: 3,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+           className="
             absolute
             left-0 bottom-0
             w-64 h-64
@@ -61,9 +70,16 @@ const HeroSection = () => {
               className="rounded-2xl shadow-xl object-cover"
               priority
             />
-          </div>
+          </motion.div>
 
-          <div className="
+          <motion.div
+          animate={{ y: [0, -5, 0] }}
+      transition={{
+        duration: 3,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+          className="
             absolute
             right-0 top-0
             w-72 h-72
@@ -78,7 +94,7 @@ const HeroSection = () => {
               className="rounded-2xl shadow-2xl object-cover"
               priority
             />
-          </div>
+          </motion.div>
         </div>
 
       </div>

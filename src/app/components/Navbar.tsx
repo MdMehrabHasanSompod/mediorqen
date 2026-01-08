@@ -8,7 +8,7 @@ import AvatarDropdown from './AvatarDropdown'
 const Navbar = () => {
   const session = useSession()
   return (
- <nav className="w-[95%] z-50 max-w-4xl mt-2 mx-auto fixed left-1/2 transform -translate-x-1/2 flex items-center justify-between gap-20 bg-blue-500 rounded-lg px-4 py-2 shadow-lg">
+ <nav className="w-[95%] max-w-5xl z-50 mt-2 mx-auto fixed left-1/2 transform -translate-x-1/2 flex items-center justify-between gap-20 bg-blue-500 rounded-lg px-4 py-2 shadow-lg">
            <Image src='/logo.png' width={300} height={300} alt='MediOrqen'/>
            <div className='text-white font-bold text-xl flex items-center justify-between gap-3'>
             <Link href="/doctors">Doctors</Link>
