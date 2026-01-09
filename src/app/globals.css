@@ -4,6 +4,20 @@
   @apply bg-blue-600 text-white;
 }
 
+@keyframes infinite-scroll {
+  from {
+    transform: translateX(0);
+  } 
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.infinite-scroll {
+  animation: infinite-scroll 40s linear infinite;
+  will-change: transform;
+}
+
 body{
     font-family: var(--font-body), system-ui, sans-serif;;
 }

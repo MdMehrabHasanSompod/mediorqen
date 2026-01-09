@@ -1,4 +1,5 @@
 "use client";
+import { assets } from "@/src/assets/assets";
 import { ArrowLeft, Eye, EyeOff, Loader2 } from "lucide-react";
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
@@ -145,7 +146,7 @@ const Login = () => {
           onClick={() => signIn("google", { callbackUrl: "/" })}
           className="w-full cursor-pointer flex items-center justify-center gap-4 border border-gray-300 py-3 px-4 rounded-lg hover:bg-gray-50 transition"
         >
-          <Image src="/google.png" alt="Google" width={22} height={22} />
+          <Image src={assets.GoogleImage} alt="Google" width={22} height={22} />
           <span className="text-sm font-medium text-gray-700">
             Continue with Google
           </span>

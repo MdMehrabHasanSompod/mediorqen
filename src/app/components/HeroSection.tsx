@@ -7,7 +7,7 @@ import {motion} from "motion/react"
 const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex items-center">
-      <div className="container  mt-20 mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div className="container  mt-30 mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div className="block lg:hidden">
           <Image
             src="/heroSectionDoctor1.png"
@@ -20,7 +20,7 @@ const HeroSection = () => {
         </div>
 
         <div className="space-y-6 text-center lg:text-left">
-          <h1 className="text-4xl md:text-5xl xl:text-6xl font-bold text-blue-900 leading-tight">
+          <h1 className="text-4xl md:text-5xl xl:text-7xl font-bold text-blue-900 leading-tight">
             Your Health, <br />
             <span className="text-blue-600">Our Priority</span>
           </h1>
@@ -33,13 +33,13 @@ const HeroSection = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
             <Link
               href="/doctors"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition"
+              className="bg-blue-600 hover:scale-104 transition duration-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold"
             >
               Book Appointment
             </Link>
             <Link
               href="/register"
-              className="border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-6 py-3 rounded-xl font-semibold transition"
+              className="border hover:scale-104 transition duration-400 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-6 py-3 rounded-xl font-semibold"
             >
               Register Now
             </Link>
