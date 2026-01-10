@@ -16,7 +16,7 @@ const Doctors = async() => {
   }));
  
   return(
-  <div className="px-4 md:px-6 lg:px-8 max-w-400 mx-auto pb-12 md:pb-20">
+  <div className="px-4 md:px-6 lg:px-8 max-w-400 mx-auto pb-12 md:pb-20 min-h-screen">
     <Link
       href="/"
       className="text-sm text-gray-700 font-semibold inline-flex items-center gap-2 hover:text-blue-600 hover:scale-105 transition duration-300 my-6"

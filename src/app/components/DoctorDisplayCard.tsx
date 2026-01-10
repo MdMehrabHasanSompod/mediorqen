@@ -9,7 +9,7 @@ const DoctorDisplayCard = ({ name, speciality, qualifications, image,availabilit
 
 
   return (
-    <div className="bg-blue-100 w-full rounded-2xl shadow-lg p-6 lg:p-7 flex flex-col items-center text-center relative">
+    <div className="bg-blue-300 w-full rounded-2xl shadow-lg p-6 lg:p-7 flex flex-col items-center text-center relative">
         <div className="absolute top-0 right-0 mt-4 mr-4 z-10 flex items-center gap-2 bg-white px-3 py-1 rounded-full shadow-md">
         <span
           className={`w-3 h-3 rounded-full ${
