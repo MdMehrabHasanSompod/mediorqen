@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import {Inter, Poppins} from 'next/font/google'
 import "./globals.css";
 import SessionWrapper from "./components/SessionWrapper";
+import AuthLoader from "./components/AuthLoader";
 
 const poppins = Poppins({
   subsets:['latin'],
@@ -31,6 +32,7 @@ export default function RootLayout({
         className="bg-linear-to-br from-blue-50 to-blue-200 bg-no-repeat w-full"
       >
         <SessionWrapper>
+          <AuthLoader/>
           {children}
         </SessionWrapper>
       </body>

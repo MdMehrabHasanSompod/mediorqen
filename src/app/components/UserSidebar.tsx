@@ -4,8 +4,11 @@ import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
+type propType = {
+  setCurrentMenu: React.Dispatch<React.SetStateAction<string>>
+}
 
-const UserSidebar = () => {
+const UserSidebar = ({setCurrentMenu}:propType) => {
       const [toggleSidebar,setToggleSidebar] = useState<boolean>(false)
       const [showText,setShowText] = useState<boolean>(true)
       const router = useRouter()
@@ -21,7 +24,7 @@ useEffect(() => {
 
 
   return (
-    <div className={`h-screen md:col-span-3 lg:col-span-2 bg-blue-300 border-r-3 border-blue-500 py-2 hidden md:flex flex-col  transition-all duration-300 ease-in ${toggleSidebar?"w-18":"w-full"}`}>
+    <aside className={`h-screen sticky top-0 overflow-y-auto md:col-span-3 lg:col-span-2 bg-blue-300 border-r-3 border-blue-500 py-2 hidden md:flex flex-col  transition-all duration-300 ease-in ${toggleSidebar?"w-18":"w-full"}`}>
      <div className={`flex ${toggleSidebar && 'flex-col'} items-center justify-between gap-4 mx-2 lg:mx-4 py-2 text-blue-900 font-semibold`}>
       <div className={`flex items-center justify-center gap-1 cursor-pointer transition-opacity duration-600`} onClick={()=>router.push("/")}>
        <Home className='w-5 h-5'/>
@@ -33,25 +36,25 @@ useEffect(() => {
        </div>
        <hr className="text-blue-500 bg-blue-500 h-0.5" />
         <div className={`my-3 ${toggleSidebar && "mx-auto"} font-semibold overflow-hidden`}>
-          <div className={`flex items-center justify-start gap-1 cursor-pointer text-blue-900 hover:text-blue-800  transition-opacity duration-600 px-2 lg:px-4 py-3` } onClick={()=>router.push("/")}>
+          <div className={`flex items-center justify-start gap-1 cursor-pointer text-blue-900 hover:text-blue-800  transition-opacity duration-600 px-2 lg:px-4 py-3` } onClick={()=>setCurrentMenu("dashboard")}>
             <LayoutDashboard className='w-6 h-6'/>
             <p className={`text-md lg:text-lg transition-opacity duration-300 ${toggleSidebar ? "opacity-0" : "opacity-100"} ${showText ? "block" : "hidden"}`}>
             Dashboard
             </p>
           </div>   
-          <div className={`flex items-center justify-start gap-1 cursor-pointer text-blue-900 hover:text-blue-800  transition-opacity duration-600 px-2 lg:px-4 py-3`} onClick={()=>router.push("/")}>
+          <div className={`flex items-center justify-start gap-1 cursor-pointer text-blue-900 hover:text-blue-800  transition-opacity duration-600 px-2 lg:px-4 py-3`} onClick={()=>setCurrentMenu("appointments")}>
             <ClipboardPlus className='w-6 h-6'/>
             <p className={`text-md lg:text-lg transition-opacity duration-300 ${toggleSidebar ? "opacity-0" : "opacity-100"} ${showText ? "block" : "hidden"}`}>
             Appointments
             </p>
           </div>  
-         <div className={`flex items-center justify-start gap-1 cursor-pointer text-blue-900 hover:text-blue-800  transition-opacity duration-600 px-2 lg:px-4 py-3`} onClick={()=>router.push("/")}>
+         <div className={`flex items-center justify-start gap-1 cursor-pointer text-blue-900 hover:text-blue-800  transition-opacity duration-600 px-2 lg:px-4 py-3`} onClick={()=>setCurrentMenu("my-doctor")}>
             <BriefcaseMedical className='w-6 h-6'/>
             <p className={`text-md lg:text-lg transition-opacity duration-300 ${toggleSidebar ? "opacity-0" : "opacity-100"} ${showText ? "block" : "hidden"}`}>
-            View Doctors
+            My Doctors
             </p>
           </div>  
-         <div className={`flex items-center justify-start gap-1 cursor-pointer text-blue-900 hover:text-blue-800  transition-opacity duration-600 px-2 lg:px-4 py-3`} onClick={()=>router.push("/")}>
+         <div className={`flex items-center justify-start gap-1 cursor-pointer text-blue-900 hover:text-blue-800  transition-opacity duration-600 px-2 lg:px-4 py-3`} onClick={()=>setCurrentMenu("profile")}>
             <User className='w-6 h-6'/>
             <p className={`text-md lg:text-lg transition-opacity duration-300 ${toggleSidebar ? "opacity-0" : "opacity-100"} ${showText ? "block" : "hidden"}`}>
             Profile
@@ -68,7 +71,7 @@ useEffect(() => {
         <LogOut className='w-5 h-5'/>
         </button>
         </div>
-     </div>
+     </aside>
   )
 }
 

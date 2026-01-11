@@ -5,6 +5,7 @@ interface IUser{
     email:string,
     phone?:string,
     password?:string,
+    gender?: "Male" | "Female" | "Others",
     age?:number,
     bloodGroup?: "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-",
     role:"user" | "admin" | "super-admin" | "doctor",
@@ -48,6 +49,10 @@ const userSchema  = new mongoose.Schema<IUser>({
     },
     age:{
         type:Number
+    },
+    gender:{
+        type:String,
+        enum:["Male","Female","Others"]
     },
     bloodGroup:{
         type:String,

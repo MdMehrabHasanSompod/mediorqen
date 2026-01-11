@@ -5,7 +5,7 @@ import Link from 'next/link';
 import React from 'react';
 
 
-const DoctorDisplayCard = ({ name, speciality, qualifications, image,availability,slug,fees }: IDoctor) => {
+const DoctorDisplayCard = ({ name, speciality, qualifications, image,availability,slug}: IDoctor) => {
 
 
   return (

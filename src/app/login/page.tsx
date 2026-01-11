@@ -27,7 +27,7 @@ const Login = () => {
       })
       console.log(result);
       if (result?.ok) {
-        router.push("/");
+        router.push("/user/dashboard");
       }
       setEmail("");
       setPassword("");
@@ -104,18 +104,13 @@ const Login = () => {
             <button
               type="button"
               onClick={() => setShowPass((prev) => !prev)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 cursor-pointer"
             >
               {showPass ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
 
-          <div className="flex items-center justify-between">
-            <label className="flex items-center gap-3 text-sm text-gray-600">
-              <input type="checkbox" className="rounded cursor-pointer" />
-              <span>Remember me</span>
-            </label>
-            
+          <div>
             <button
               type="button"
               onClick={() => router.push("/forgot-password")}

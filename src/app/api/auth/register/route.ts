@@ -5,8 +5,8 @@ import bcrypt from "bcrypt"
 
 export const POST = async(request:NextRequest)=>{
     try {
-        const {name,email,phone,password,age} = await request.json()
-        if(!name || !email || !phone || !password ){
+        const {name,email,phone,password,age,gender} = await request.json()
+        if(!name || !email || !phone || !password || !age || !gender){
             return NextResponse.json(
                 {success:false,message:"All fields are required"},
                 {status:400}
@@ -33,7 +33,8 @@ export const POST = async(request:NextRequest)=>{
         email,
         phone,
         password:hashedPassword,
-        age
+        age,
+        gender
        })
     
 

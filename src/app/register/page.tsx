@@ -14,6 +14,7 @@ const Register = () => {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [age, setAge] = useState("");
+  const [gender,setGender] = useState("")
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
   const router = useRouter()
@@ -28,6 +29,7 @@ const Register = () => {
         phone,
         password,
         age,
+        gender,
       });
       console.log(result);
       setName("");
@@ -35,6 +37,7 @@ const Register = () => {
       setPassword("");
       setPhone("");
       setAge("");
+      setGender("")
       setLoading(false);
       router.push("/login")
     } catch (error) {
@@ -43,6 +46,7 @@ const Register = () => {
       setEmail("");
       setPassword("");
       setPhone("");
+      setGender("")
       setAge("");
       setLoading(false);
     }
@@ -64,8 +68,7 @@ const Register = () => {
         </h1>
         
         <form className="space-y-4" onSubmit={submitHandler}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
+          <div>
               <input
                 type="text"
                 placeholder="Full Name"
@@ -75,8 +78,7 @@ const Register = () => {
                 required
               />
             </div>
-
-            <div>
+             <div>
               <input
                 type="email"
                 placeholder="Email"
@@ -86,9 +88,35 @@ const Register = () => {
                 required
               />
             </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <input
+                type="number"
+                placeholder="Age"
+                min={1}
+                max={150}
+                className="form-input"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <select
+                name="gender"
+                value={gender}
+                onChange={(e) =>setGender(e.target.value)}
+                className="form-select"
+                required
+              >
+                <option value="" className="select-option">Select Gender</option>
+                <option value="Male" className="select-option">Male</option>
+                <option value="Female" className="select-option">Female</option>
+                <option value="Others" className="select-option">Others</option>
+              </select>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <input
                 type="tel"
@@ -108,20 +136,6 @@ const Register = () => {
                 }
                 required
               />
-            </div>
-
-            <div>
-              <input
-                type="number"
-                placeholder="Age"
-                min={1}
-                max={150}
-                className="form-input"
-                value={age}
-                onChange={(e) => setAge(e.target.value)}
-                required
-              />
-            </div>
           </div>
 
           <div className="relative">
@@ -161,7 +175,7 @@ const Register = () => {
             <button
               type="button"
               onClick={() => setShowPass((prev) => !prev)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 cursor-pointer"
             >
               {showPass ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
