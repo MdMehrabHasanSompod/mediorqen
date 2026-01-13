@@ -1,25 +1,20 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import Image from "next/image";
 import { LogOut, User } from "lucide-react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
+import { IUser } from "@/types/user";
 
-interface IUser {
-    id: string
-    email: string
-    name: string
-    role: string
-    image?: string | null
-  }
-
-export default function AvatarDropdown({ user }:{user:IUser}) {
+export default function AvatarDropdown({ user }: { user: IUser }) {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    function handleClickOutside(event:MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setOpen(false);
       }
     }
@@ -31,19 +26,22 @@ export default function AvatarDropdown({ user }:{user:IUser}) {
     <div className="relative inline-block text-left" ref={dropdownRef}>
       <button
         onClick={() => setOpen(!open)}
-        className="w-10 h-10 rounded-full cursor-pointer overflow-hidden border-2 border-gray-300 flex items-center justify-center"
+        className="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300 bg-gray-100 
+             hover:ring-2 hover:ring-blue-400 transition
+             bg-cover bg-center flex items-center justify-center cursor-pointer"
+        style={
+          user.avatar
+            ? {
+                backgroundImage: `url(${user.avatar})`,
+                backgroundPosition: "center",
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat"
+              }
+            : undefined
+        }
       >
-              {user.image ? (
-                    <Image
-                    src={user.image}
-                    alt="User avatar"
-                    width={40}
-                    height={40}
-                     className="rounded-full"
-                    />
-                  ) : ( <User className="w-10 h-10 rounded-full bg-white text-blue-600"/>)}
+        {!user.avatar && <User className="w-10 h-10 text-white" />}
       </button>
-
       {open && (
         <div className="absolute right-0 mt-2 w-48 bg-blue-50 border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden">
           <Link
@@ -53,14 +51,16 @@ export default function AvatarDropdown({ user }:{user:IUser}) {
             Dashboard
           </Link>
           <Link
-            href="/user/appointments"
+            href="/user/helpline"
             className="block px-4 py-2 text-blue-700 hover:bg-blue-100 "
           >
-            Appointments
+            Helpline
           </Link>
-          <button className='w-full text-left px-4 py-2 flex items-center justify-between gap-1 text-red-600 cursor-pointer hover:bg-red-100' onClick={()=>signOut()}
+          <button
+            className="w-full text-left px-4 py-2 flex items-center justify-between gap-1 text-red-600 cursor-pointer hover:bg-red-100"
+            onClick={() => signOut()}
           >
-            Logout <LogOut className='w-6 h-6'/>
+            Logout <LogOut className="w-6 h-6" />
           </button>
         </div>
       )}
