@@ -3,6 +3,7 @@ import {Inter, Poppins} from 'next/font/google'
 import "./globals.css";
 import SessionWrapper from "./components/SessionWrapper";
 import AuthLoader from "./components/AuthLoader";
+import AppointmentsLoader from "./components/AppointmentLoader";
 
 const poppins = Poppins({
   subsets:['latin'],
@@ -33,6 +34,7 @@ export default function RootLayout({
       >
         <SessionWrapper>
           <AuthLoader/>
+          <AppointmentsLoader/>
           {children}
         </SessionWrapper>
       </body>

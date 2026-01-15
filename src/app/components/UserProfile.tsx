@@ -1,7 +1,7 @@
 "use client"
 import { useUserStore } from '@/src/store/user.store';
 import axios from 'axios';
-import { Loader2, LogOut, PlusCircle, RotateCcw, Settings, Trash2, UploadIcon, User, Wrench } from 'lucide-react'
+import { Loader2, LogOut, MenuSquare, PlusCircle, RotateCcw, Settings, Trash2, UploadIcon, User, Wrench } from 'lucide-react'
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image'
 import { useRouter } from 'next/navigation';
@@ -11,7 +11,11 @@ const BloodGroup:string[] = [
       "A+" , "A-" , "B+" , "B-" , "AB+" , "AB-" , "O+" , "O-"
 ]
 
-const UserProfile = () => {
+type propType = {
+  setOpenMobileSidebar: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const UserProfile = ({setOpenMobileSidebar}:propType) => {
   const user = useUserStore((state)=>state.user)
   const session = useSession()
   const setUser = useUserStore((state)=>state.setUser)
@@ -107,7 +111,7 @@ const handleDeleteAccount = async() => {
 
   return (
    <div className='w-full mx-auto'>
-      <h1 className='text-xl md:text-2xl lg:text-3xl text-blue-900 font-semibold  bg-blue-300 w-full py-4 px-8 shadow-md rounded-md my-2'>Patient Profile</h1>
+      <h1 className='text-xl md:text-2xl lg:text-3xl text-blue-900 font-semibold  bg-blue-300 w-full py-4 px-8 shadow-md rounded-md my-2 flex items-center justify-between gap-4'>Patient Profile<MenuSquare size={30} className='block lg:hidden cursor-pointer' onClick={()=>setOpenMobileSidebar(prev=> !prev)}/></h1>
       <div className='w-full flex flex-col md:flex-row mt-10 gap-4'>
       <div className='m-2 flex flex-col flex-1 gap-3'>
       <div className='bg-blue-200 p-6 rounded-lg flex flex-col gap-2'>

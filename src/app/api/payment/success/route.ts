@@ -22,8 +22,7 @@ export const POST = async (req: NextRequest) => {
         }
     await connectDB();
 
-    const appointment = await Appointment.findById(appointmentId);
-    
+    const appointment = await Appointment.findById(appointmentId).populate("doctorId","name speciality image availability phone").populate("patientId","name age gender bloodGroup phone avatar email");
       if (!appointment) {
        return NextResponse.json(
         { success: false, message: "Appointment not found" },
@@ -31,7 +30,7 @@ export const POST = async (req: NextRequest) => {
       );
     } 
 
-     if (appointment.patientId.toString() !== session.user.id) {
+     if (appointment.patientId._id.toString() !== session.user.id) {
           return NextResponse.json(
             { success: false, message: "You are not allowed to access this appointment" },
             { status: 403 }
@@ -59,9 +58,8 @@ export const POST = async (req: NextRequest) => {
 
      await appointment.save();
 
-  
-  return NextResponse.json({ success: true,message:"Payment Completed Successfully"},{status:200});
+  return NextResponse.json({ success: true,message:"Payment Completed Successfully",appointment},{status:200});
   } catch (error) {
-    return NextResponse.json({ success:false, message:"Internal Server Error" },{status:500});
+    return NextResponse.json({ success:false, message:"Internal Server Error",},{status:500});
   }
 };

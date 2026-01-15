@@ -1,25 +1,25 @@
 "use client";
 
+import { useAppointmentStore } from "@/src/store/appointment.store";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-interface IPropsType {
-  appointmentId: string;
-  appointmentType: string;
-}
 
-const PaymentClient = ({appointmentId,appointmentType}: IPropsType) =>{
+const PaymentClient = ({appointmentId}:{appointmentId: string;}) =>{
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const addAppointment = useAppointmentStore((state)=>state.addAppointment)
 
   const handlePayment = async () => {
     setLoading(true);
     try {
      const result = await axios.post("/api/payment/success", { appointmentId });
-
-      router.push(`/user/booking-success?appointmentId=${appointmentId}&appointmentType=${appointmentType}`);
+      if(result.data.success){
+         addAppointment(result.data.appointment)
+      }
+      router.push(`/user/booking-success?appointmentId=${appointmentId}`);
       setLoading(false)
     } catch(error){
       setLoading(false);

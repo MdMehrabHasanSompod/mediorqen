@@ -38,7 +38,7 @@ export const GET = async (request: NextRequest) => {
     const bookedAppointments = await Appointment.find({
       doctorId,
       date: { $gte: startOfDay, $lte: endOfDay },
-      status: { $ne: "cancelled" },
+      status: {$in: ["Pending", "Confirmed", "Awaiting Payment"]},
     })
       .select("slot")
       .lean();

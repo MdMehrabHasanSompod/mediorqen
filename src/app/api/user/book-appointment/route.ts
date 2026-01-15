@@ -33,7 +33,7 @@ export const POST = async(request:NextRequest) => {
         doctorId,
         date,
         slot,
-        status: { $in: ["Pending", "Confirmed"] },
+        status: { $in: ["Pending","Awaiting Payment","Confirmed"] },
     });
 
     if(isSlotAvailable){

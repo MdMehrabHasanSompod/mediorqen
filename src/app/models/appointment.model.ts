@@ -13,7 +13,7 @@ interface IAppointment {
   status: "Pending" | "Awaiting Payment" | "Confirmed" | "Cancelled" | "Completed";
   expiresAt?: Date;
 }
- 
+  
 const appointmentSchema = new mongoose.Schema<IAppointment>({
     doctorId:{
         type: mongoose.Schema.Types.ObjectId,

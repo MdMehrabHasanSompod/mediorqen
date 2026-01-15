@@ -13,18 +13,18 @@ const UserSidebar = ({setCurrentMenu}:propType) => {
       const [showText,setShowText] = useState<boolean>(true)
       const router = useRouter()
 
-useEffect(() => {
-     if (toggleSidebar) {
+      useEffect(() => {
+       if (toggleSidebar) {
     
-    setTimeout(() => setShowText(false), 200);
-  } else {
-    setTimeout(() => setShowText(true), 200);
-  }
-}, [toggleSidebar]);
+      setTimeout(() => setShowText(false), 200);
+     } else {
+      setTimeout(() => setShowText(true), 200);
+     }
+      }, [toggleSidebar]);
 
 
   return (
-    <aside className={`h-screen sticky top-0 overflow-y-auto md:col-span-3 lg:col-span-2 bg-blue-300 border-r-3 border-blue-500 py-2 hidden md:flex flex-col  transition-all duration-300 ease-in ${toggleSidebar?"w-18":"w-full"}`}>
+    <aside className={`h-screen sticky top-0 overflow-y-auto  bg-blue-300 border-r-3 border-blue-500 py-2 hidden lg:flex flex-col transition-all duration-300 ease-in ${toggleSidebar?"w-18":"w-60"}`}>
      <div className={`flex ${toggleSidebar && 'flex-col'} items-center justify-between gap-4 mx-2 lg:mx-4 py-2 text-blue-900 font-semibold`}>
       <div className={`flex items-center justify-center gap-1 cursor-pointer transition-opacity duration-600`} onClick={()=>router.push("/")}>
        <Home className='w-5 h-5'/>
@@ -35,26 +35,26 @@ useEffect(() => {
        <PanelLeft className='w-5 h-5 cursor-pointer' onClick={()=>setToggleSidebar(!toggleSidebar)}/>
        </div>
        <hr className="text-blue-500 bg-blue-500 h-0.5" />
-        <div className={`my-3 ${toggleSidebar && "mx-auto"} font-semibold overflow-hidden`}>
-          <div className={`flex items-center justify-start gap-1 cursor-pointer text-blue-900 hover:text-blue-800  transition-opacity duration-600 px-2 lg:px-4 py-3` } onClick={()=>setCurrentMenu("dashboard")}>
+        <div className={`my-3 ${toggleSidebar && "mx-auto"} font-semibold overflow-y-auto`}>
+          <div className={`flex items-center justify-start gap-1 hover:bg-blue-200 cursor-pointer text-blue-900 hover:text-blue-800  transition-opacity duration-600 px-2 lg:px-4 py-3` } onClick={()=>setCurrentMenu("dashboard")}>
             <LayoutDashboard className='w-6 h-6'/>
             <p className={`text-md lg:text-lg transition-opacity duration-300 ${toggleSidebar ? "opacity-0" : "opacity-100"} ${showText ? "block" : "hidden"}`}>
             Dashboard
             </p>
           </div>   
-          <div className={`flex items-center justify-start gap-1 cursor-pointer text-blue-900 hover:text-blue-800  transition-opacity duration-600 px-2 lg:px-4 py-3`} onClick={()=>setCurrentMenu("appointments")}>
+          <div className={`flex items-center justify-start gap-1 hover:bg-blue-200 cursor-pointer text-blue-900 hover:text-blue-800 transition-opacity duration-600 px-2 lg:px-4 py-3`} onClick={()=>setCurrentMenu("appointments")}>
             <ClipboardPlus className='w-6 h-6'/>
             <p className={`text-md lg:text-lg transition-opacity duration-300 ${toggleSidebar ? "opacity-0" : "opacity-100"} ${showText ? "block" : "hidden"}`}>
             Appointments
             </p>
           </div>  
-         <div className={`flex items-center justify-start gap-1 cursor-pointer text-blue-900 hover:text-blue-800  transition-opacity duration-600 px-2 lg:px-4 py-3`} onClick={()=>setCurrentMenu("my-doctor")}>
+         <div className={`flex items-center justify-start gap-1 hover:bg-blue-200 cursor-pointer text-blue-900 hover:text-blue-800 transition-opacity duration-600 px-2 lg:px-4 py-3`} onClick={()=>setCurrentMenu("my-doctor")}>
             <BriefcaseMedical className='w-6 h-6'/>
             <p className={`text-md lg:text-lg transition-opacity duration-300 ${toggleSidebar ? "opacity-0" : "opacity-100"} ${showText ? "block" : "hidden"}`}>
             My Doctors
             </p>
           </div>  
-         <div className={`flex items-center justify-start gap-1 cursor-pointer text-blue-900 hover:text-blue-800  transition-opacity duration-600 px-2 lg:px-4 py-3`} onClick={()=>setCurrentMenu("profile")}>
+         <div className={`flex items-center justify-start gap-1 hover:bg-blue-200 cursor-pointer text-blue-900 hover:text-blue-800 transition-opacity duration-600 px-2 lg:px-4 py-3`} onClick={()=>setCurrentMenu("profile")}>
             <User className='w-6 h-6'/>
             <p className={`text-md lg:text-lg transition-opacity duration-300 ${toggleSidebar ? "opacity-0" : "opacity-100"} ${showText ? "block" : "hidden"}`}>
             Profile
