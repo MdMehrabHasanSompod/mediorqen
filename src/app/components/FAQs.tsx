@@ -51,7 +51,7 @@ const FAQs = () => {
           className="w-full bg-blue-300 text-blue-700 cursor-pointer px-6 py-3 font-semibold rounded-lg flex items-center gap-2"
         >
           <span>{activeIndex === index? <Minus /> : <Plus />}</span>
-          {qa.question}
+          <span className='text-left'>{qa.question}</span>
         </button>
 
         <div

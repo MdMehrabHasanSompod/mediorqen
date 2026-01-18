@@ -1,11 +1,11 @@
 import { IDoctor } from '@/types/doctor';
-import { BookCheck } from 'lucide-react';
+import { Mail, PhoneCall } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
 
-const DoctorDisplayCard = ({ name, speciality, qualifications, image,availability,slug}: IDoctor) => {
+const DoctorDisplayCard = ({ name, speciality, qualifications, image,availability,slug, email, phone}: IDoctor) => {
 
 
   return (
@@ -50,10 +50,13 @@ const DoctorDisplayCard = ({ name, speciality, qualifications, image,availabilit
         <Link href={`/doctors/${slug}`} className="cursor-pointer w-full sm:flex-1 px-5 py-2.5 break text-sm lg:text-base bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 transition">
           View Doctor
         </Link>
-
-        <button className="cursor-pointer w-full sm:flex-1 flex items-center whitespace-nowrap justify-center gap-2 px-5 py-2.5 text-sm lg:text-base bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 transition">
-          <BookCheck size={18} />
-          Book Appointment
+        <button onClick={() => window.location.href = `mailto:${email}`} className="cursor-pointer w-full sm:flex-1 flex items-center whitespace-nowrap justify-center gap-2 px-5 py-2.5 text-sm lg:text-base bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 transition">
+          <Mail size={18} />
+          {email}
+        </button>
+        <button onClick={() => window.location.href = `tel:${phone}`} className="cursor-pointer w-full sm:flex-1 flex items-center whitespace-nowrap justify-center gap-2 px-5 py-2.5 text-sm lg:text-base bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 transition">
+          <PhoneCall size={18} />
+          Call Doctor
         </button>
       </div>
     </div>

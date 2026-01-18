@@ -44,9 +44,17 @@ export const GET = async (request: NextRequest) => {
       .lean();
 
     const bookedSlots = bookedAppointments.map((b) => b.slot);
-    const availableSlots = allTimeSlots.filter(
-      (slot) => !bookedSlots.includes(slot)
-    );
+    const now = new Date();
+    const availableSlots = allTimeSlots.filter((slot)=>{
+       if (bookedSlots.includes(slot)) return false;
+       if (selectedDate.toDateString() === now.toDateString()) {
+        const [hour, min] = slot.split(":").map(Number);
+        const slotTime = new Date(selectedDate);
+        slotTime.setHours(hour, min, 0, 0);
+        if (slotTime <= now) return false; 
+       }
+       return true;
+  });
 
     return NextResponse.json(
       { success: true, availableSlots },

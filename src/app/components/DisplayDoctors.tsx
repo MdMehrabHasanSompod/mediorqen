@@ -2,18 +2,11 @@
 import React, { useState, useEffect  } from 'react'
 import DoctorDisplayCard from './DoctorDisplayCard';
 import ResponsiveSearch from './ResponsiveSearch';
-import { Loader2 } from 'lucide-react';
-import { IDoctor } from '@/types/doctor';
 import { useDoctorStore } from '@/src/store/doctor.store';
 
-interface IDisplayCardInfoProps {
-  plainDoctors: IDoctor[];
-}
 
-const DisplayDoctors = ({plainDoctors=[]}:IDisplayCardInfoProps) => {
-  const setDoctors = useDoctorStore((s) => s.setDoctors);
-  const storedDoctors = useDoctorStore((s) => s.doctors);
-  const [loading,setLoading] = useState(true)
+const DisplayDoctors = () => {
+    const storedDoctors = useDoctorStore((s)=>s.doctors)
     const [currentPage, setCurrentPage] = useState(1)
     const [searchTerm, setSearchTerm] = useState("")
      const perPage = 5;
@@ -30,10 +23,6 @@ const DisplayDoctors = ({plainDoctors=[]}:IDisplayCardInfoProps) => {
         const totalPages = Math.ceil(filteredDoctors.length / perPage)
         const currentDoctors = filteredDoctors.slice((currentPage-1)*perPage, currentPage*perPage)
 
-    useEffect(() => {
-    setDoctors(plainDoctors);
-    Promise.resolve().then(()=>setLoading(false))
-}, [plainDoctors, setDoctors]);
              
 const handleSearch = (value:React.SetStateAction<string>) => {
   setSearchTerm(value);
@@ -48,15 +37,6 @@ useEffect(() => {
   return (
     <>
     <ResponsiveSearch searchTerm={searchTerm} setSearchTerm={handleSearch} placeholderText='Search doctor by name or speciality...' />
-    {loading ? (
-      <div className="fixed inset-0 flex items-center justify-center bg-white/70 z-50">
-        <div className="flex items-center  gap-3 text-gray-600 text-base md:text-lg font-semibold">
-          <Loader2 size={26} className="animate-spin text-blue-500" />
-          Loading doctors...
-        </div>
-      </div>
-    ) : (
-      <>
         {filteredDoctors.length === 0 ? (
         <div className="flex items-center justify-center  gap-3 text-gray-600 text-base md:text-lg font-semibold">
            <p className="text-center text-gray-500 mt-50 text-lg">No doctors found.</p>
@@ -117,8 +97,6 @@ useEffect(() => {
         </>
        )}
       </>
-    )}
-    </>
   )
 }
 

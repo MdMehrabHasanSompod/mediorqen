@@ -10,8 +10,6 @@ export async function getAppointments({id,role}:{id:string,role:string}): Promis
     throw new Error("Failed to fetch Appointments");
   }
 
-
-
   const json = await res.json();
   return json.userAppointments;
 }

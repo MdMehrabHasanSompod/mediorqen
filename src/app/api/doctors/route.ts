@@ -5,7 +5,7 @@ import { Doctor } from "../../models/doctor.model";
 export const GET = async(request:NextRequest) => {
     try {
         await connectDB()
-        const Doctors = await Doctor.find({}).select("name speciality qualifications slug image availability fees").lean();
+        const Doctors = await Doctor.find({}).select("name speciality qualifications slug image availability fees phone email").lean();
         return NextResponse.json(
             {success:true,message:"Doctor Fetched Successfully",Doctors},
             {status:200}

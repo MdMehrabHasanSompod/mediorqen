@@ -17,11 +17,17 @@ const Dashboard = ({setOpenMobileSidebar}:propType) => {
   const setAppointments = useAppointmentStore((state)=>state.setAppointments)
   const appointments = useAppointmentStore((state)=>state.appointments)
   const nextAppointment = useAppointmentStore((state) => {
-  const upcoming = state.appointments.filter(
-    (a) =>
-      a.status === "Confirmed" &&
-      new Date(a.date) >= new Date()
-  );
+  const now = new Date();
+
+  const upcoming = state.appointments.filter((a) => {
+    if (a.status !== "Confirmed") return false;
+
+    const appointmentDate = new Date(a.date);
+    const [hour, min] = a.slot.split(":").map(Number);
+    appointmentDate.setHours(hour, min, 0, 0);
+
+    return appointmentDate >= now;
+  });
 
   upcoming.sort((a, b) => {
     const dateA = new Date(a.date);

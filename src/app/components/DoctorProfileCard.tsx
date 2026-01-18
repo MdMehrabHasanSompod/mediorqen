@@ -9,6 +9,7 @@ import {
   Hospital,
   ChevronDown,
   Loader2,
+  PhoneCall,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -21,7 +22,7 @@ const days = Array.from({ length: 7 }).map((_, i) => {
   return d;
 });
 
-const DoctorProfileCard = ({_id,fees,name,speciality,qualifications,image,availability}: IDoctor) => {
+const DoctorProfileCard = ({_id,fees,name,speciality,qualifications,image,availability,email,phone}: IDoctor) => {
   const [availableSlots,setAvailableSlots] = useState<string[]>([])
   const [showBooking, setShowBooking] = useState(false);
   const [appointmentType, setAppointmentType] = useState<"Physical" | "Online" | null>(null);
@@ -142,6 +143,17 @@ const DoctorProfileCard = ({_id,fees,name,speciality,qualifications,image,availa
             ))}
           </div>
             <p className="text-sm sm:text-base">
+            <span className="font-semibold text-gray-600">
+              Email:
+            </span>{" "}
+            <span onClick={() => window.location.href = `mailto:${email}`} className="text-blue-600 font-medium cursor-pointer">
+              &nbsp;{email}
+            </span>
+          </p>
+            <button onClick={() => window.location.href = `tel:${phone}`}  className="cursor-pointer inline-flex items-center whitespace-nowrap justify-center md:justify-start gap-2 px-5 py-2.5 text-sm lg:text-base bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 transition" >
+             <PhoneCall size={18}/> Call Doctor
+          </button>
+              <p className="text-sm sm:text-base">
             <span className="font-semibold text-gray-600">
               Appointment Fees:
             </span>{" "}

@@ -1,42 +1,21 @@
 "use client";
-import React, { useEffect, useMemo } from "react";
+import React from "react";
 import { useParams } from "next/navigation";
 import { useDoctorStore } from "@/src/store/doctor.store";
-import { getDoctors } from "../../utils/getDoctors";
 import DoctorProfileCard from "../../components/DoctorProfileCard";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft} from "lucide-react";
 import DoctorDisplayCard from "../../components/DoctorDisplayCard";
 import Link from "next/link";
 
 const DoctorProfile = () => {
   const { slug } = useParams();
   const doctors = useDoctorStore((s) => s.doctors);
-  const setDoctors = useDoctorStore((s) => s.setDoctors);
-
-  useEffect(() => {
-    if (doctors.length === 0) {
-      getDoctors().then(setDoctors);
-    }
-  }, [doctors.length, setDoctors]);
-
-  const doctor = useMemo(() => {
-    if (!slug) return null;
-    const doctorSlug = Array.isArray(slug) ? slug[0] : slug;
-    return doctors.find((d) => d.slug === doctorSlug) ?? null;
-  }, [slug, doctors]);
+  const doctor = doctors.find((doctor)=>doctor.slug === slug)
 
   const relatedDoctors = doctors.filter(
     (d) => d.speciality === doctor?.speciality && d.slug !== slug
   );
 
-  if (doctors.length === 0) {
-    return (
-      <div className="flex items-center justify-center h-screen gap-3 text-gray-600 font-semibold">
-        <Loader2 className="animate-spin text-blue-500" size={26} />
-        Loading doctor...
-      </div>
-    );
-  }
 
   if (!doctor) {
     return (
