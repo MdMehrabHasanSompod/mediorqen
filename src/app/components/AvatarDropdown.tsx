@@ -2,12 +2,18 @@
 import { useState, useRef, useEffect } from "react";
 import { LogOut, User } from "lucide-react";
 import Link from "next/link";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { IUser } from "@/types/user";
+import {IAdmin} from "@/types/admin"
+import {ISuperAdmin} from "@/types/super-admin"
+import {IDoctor} from "@/types/doctor"
+import getAvatar from "../utils/getAvatar";
 
-export default function AvatarDropdown({ user }: { user: IUser }) {
+export default function AvatarDropdown({ user }: { user: IUser | IAdmin | ISuperAdmin | IDoctor }) {
+  const session = useSession()
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const avatar = getAvatar(user)
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -30,9 +36,9 @@ export default function AvatarDropdown({ user }: { user: IUser }) {
              hover:ring-2 hover:ring-blue-400 transition
              bg-cover bg-center flex items-center justify-center cursor-pointer"
         style={
-          user.avatar
+          avatar
             ? {
-                backgroundImage: `url(${user.avatar})`,
+                backgroundImage: `url(${avatar})`,
                 backgroundPosition: "center",
                 backgroundSize: "cover",
                 backgroundRepeat: "no-repeat"
@@ -40,18 +46,18 @@ export default function AvatarDropdown({ user }: { user: IUser }) {
             : undefined
         }
       >
-        {!user.avatar && <User className="w-10 h-10 text-white" />}
+        {!avatar && <User className="w-10 h-10 text-white" />}
       </button>
       {open && (
         <div className="absolute right-0 mt-2 w-48 bg-blue-50 border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden">
           <Link
-            href="/user/dashboard"
+            href={`/${session.data?.user.role}/dashboard`}
             className="block px-4 py-2 text-blue-700 hover:bg-blue-100"
           >
             Dashboard
           </Link>
           <Link
-            href="/user/helpline"
+            href="/helpline"
             className="block px-4 py-2 text-blue-700 hover:bg-blue-100 "
           >
             Helpline

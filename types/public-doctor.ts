@@ -1,14 +1,11 @@
-import { IUser } from "./user";
-
 export type Qualification = {
   _id: string;
   degree: string;
   institution: string;
 };
 
-export interface IDoctor{
+export interface IPublicDoctor{
   _id: string;
-  userId:IUser;
   name: string;
   slug: string;
   image: string;
@@ -19,4 +16,3 @@ export interface IDoctor{
   fees: number;
   qualifications: Qualification[];
 };
- 

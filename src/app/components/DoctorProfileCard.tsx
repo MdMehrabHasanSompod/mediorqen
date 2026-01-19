@@ -1,5 +1,5 @@
 "use client"
-import { IDoctor } from "@/types/doctor";
+import { IPublicDoctor } from "@/types/public-doctor";
 import axios from "axios";
 import {
   BookCheck,
@@ -22,7 +22,7 @@ const days = Array.from({ length: 7 }).map((_, i) => {
   return d;
 });
 
-const DoctorProfileCard = ({_id,fees,name,speciality,qualifications,image,availability,email,phone}: IDoctor) => {
+const DoctorProfileCard = ({_id,fees,name,speciality,qualifications,image,availability,email,phone}: IPublicDoctor) => {
   const [availableSlots,setAvailableSlots] = useState<string[]>([])
   const [showBooking, setShowBooking] = useState(false);
   const [appointmentType, setAppointmentType] = useState<"Physical" | "Online" | null>(null);

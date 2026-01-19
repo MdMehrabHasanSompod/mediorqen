@@ -1,12 +1,12 @@
 "use client";
-import { useDoctorStore } from "@/src/store/doctor.store";
+import { useDoctorsStore } from "@/src/store/doctors.store";
 import { useEffect } from "react";
 import { getDoctors } from "../utils/getDoctors";
 
 
 
 export default function DoctorsLoader() {  
-  const setDoctors = useDoctorStore((state) => state.setDoctors);
+  const setDoctors = useDoctorsStore((state) => state.setDoctors);
 
   useEffect(() => {
       const loadDoctors = async () => {

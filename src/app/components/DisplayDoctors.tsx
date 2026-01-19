@@ -2,11 +2,11 @@
 import React, { useState, useEffect  } from 'react'
 import DoctorDisplayCard from './DoctorDisplayCard';
 import ResponsiveSearch from './ResponsiveSearch';
-import { useDoctorStore } from '@/src/store/doctor.store';
+import { useDoctorsStore } from '@/src/store/doctors.store';
 
 
 const DisplayDoctors = () => {
-    const storedDoctors = useDoctorStore((s)=>s.doctors)
+    const storedDoctors = useDoctorsStore((s)=>s.doctors)
     const [currentPage, setCurrentPage] = useState(1)
     const [searchTerm, setSearchTerm] = useState("")
      const perPage = 5;

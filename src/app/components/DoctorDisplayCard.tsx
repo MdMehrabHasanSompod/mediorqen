@@ -1,11 +1,11 @@
-import { IDoctor } from '@/types/doctor';
+import { IPublicDoctor } from '@/types/public-doctor';
 import { Mail, PhoneCall } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
 
-const DoctorDisplayCard = ({ name, speciality, qualifications, image,availability,slug, email, phone}: IDoctor) => {
+const DoctorDisplayCard = ({ name, speciality, qualifications, image,availability,slug, email, phone}: IPublicDoctor) => {
 
 
   return (

@@ -1,8 +1,7 @@
 import { IAppointment } from "@/types/appointment";
 
-
 export async function getAppointments({id,role}:{id:string,role:string}): Promise<IAppointment[]> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user/get-appointments?id=${id}&role=${role}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/${role}/get-appointments?id=${id}&role=${role}`, {
     cache:"no-store"
   });
 
@@ -11,5 +10,5 @@ export async function getAppointments({id,role}:{id:string,role:string}): Promis
   }
 
   const json = await res.json();
-  return json.userAppointments;
+  return json.Appointments;
 }

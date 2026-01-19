@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useParams } from "next/navigation";
-import { useDoctorStore } from "@/src/store/doctor.store";
+import { useDoctorsStore } from "@/src/store/doctors.store";
 import DoctorProfileCard from "../../components/DoctorProfileCard";
 import { ArrowLeft} from "lucide-react";
 import DoctorDisplayCard from "../../components/DoctorDisplayCard";
@@ -9,7 +9,7 @@ import Link from "next/link";
 
 const DoctorProfile = () => {
   const { slug } = useParams();
-  const doctors = useDoctorStore((s) => s.doctors);
+  const doctors = useDoctorsStore((s) => s.doctors);
   const doctor = doctors.find((doctor)=>doctor.slug === slug)
 
   const relatedDoctors = doctors.filter(

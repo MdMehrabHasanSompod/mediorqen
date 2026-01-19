@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-
+import { User } from "@/src/app/models/user.model";
 import connectDB from "@/src/app/lib/db";
-import { Appointment } from "@/src/app/models/appointment.model";
 
 
 export const GET = async(request:NextRequest) => {
@@ -9,16 +8,16 @@ export const GET = async(request:NextRequest) => {
       const { searchParams } = new URL(request.url);
       const id = searchParams.get("id");
       const role = searchParams.get("role");
-        if(!id || !role || role !== "user"){
+        if(!id || !role || role !== "admin"){
            return NextResponse.json(
             {success:false,message:"Attempted to Unauthorized Access"},
             {status:401}
            )
         }
         await connectDB()
-        const Appointments = await Appointment.find({patientId:id}).select("_id doctorId date slot appointmentFees appointmentType paymentMethod paymentStatus meetingRoomId status").populate("doctorId","name speciality image availability phone slug qualifications").sort({date:-1}).lean();
+        const existedAdmin = await User.findOne({_id:id,role}).select("name email phone gender avatar createdAt").lean();
         return NextResponse.json(
-            {success:true,message:"Appointments Fetched Successfully",Appointments},
+            {success:true,message:"Admin Fetched Successfully",existedAdmin},
             {status:200}
         )
     } catch (error) {

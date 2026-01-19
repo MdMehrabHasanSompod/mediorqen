@@ -1,15 +1,23 @@
 import { create } from "zustand";
 import { IDoctor } from "@/types/doctor";
+import { IAppointment } from "@/types/appointment";
 
 interface DoctorStore {
-  doctors: IDoctor[];
-  setDoctors: (doctors: IDoctor[]) => void;
-  clearDoctors: () => void;
+  doctor: IDoctor | null;
+  setDoctor: (user: IDoctor) => void;
+  clearDoctor: () => void;
+  appointments: IAppointment[];
+  setAppointments: (appointments:IAppointment[]) => void;
+  addAppointment: (appointment: IAppointment) => void
+  clearAppointments: () => void;
 }
-
+ 
 export const useDoctorStore = create<DoctorStore>((set) => ({
-  doctors: [],
-  setDoctors: (doctors) => set({ doctors }),
-  clearDoctors: () => set({ doctors: [] }),
-
+  doctor: null,
+  setDoctor: (doctor) => set({ doctor }),
+  clearDoctor: () => set({ doctor: null }),
+  appointments: [],
+  setAppointments: (appointments) => set({ appointments }),
+  addAppointment: (appointment) => set((state)=>({appointments:[appointment,...state.appointments]})),
+  clearAppointments: () => set({ appointments: [] }),
 }));

@@ -12,7 +12,7 @@ interface IDoctor {
   image: string;
   email: string;
   phone: string;
-  slug?:string;
+  slug?:string; 
   role: "doctor";
   speciality: string;
   availability:boolean;

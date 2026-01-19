@@ -1,36 +1,31 @@
 "use client"
 import { MenuSquare } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
-import DoctorDisplayCard from './DoctorDisplayCard'
 import ResponsiveSearch from './ResponsiveSearch'
-import { useAppointmentStore } from '@/src/store/appointment.store'
-import { useDoctorsStore } from '@/src/store/doctors.store'
+import PatientDisplayCard from './PatientDisplayCard'
+import { useDoctorStore } from '@/src/store/doctor.store'
 
 
 type propType = {
   setOpenMobileSidebar: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const MyDoctors = ({setOpenMobileSidebar}:propType) => {
-  const storedDoctors = useDoctorsStore((s)=> s.doctors)
-  const userAppointments = useAppointmentStore((s) => s.appointments);
-  const bookedDoctorIds = new Set(userAppointments.map(a => a.doctorId._id));
-  const userDoctors = storedDoctors.filter(doctor =>bookedDoctorIds.has(doctor._id));
+const MyPatients = ({setOpenMobileSidebar}:propType) => {
+  const doctorAppointments = useDoctorStore((s)=> s.appointments)
+  const storedPatients = Array.from(new Map(doctorAppointments.map(a => [a.patientId._id, a.patientId])).values());
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [searchTerm, setSearchTerm] = useState<string>("")
   const perPage = 5;
-  const filteredDoctors = userDoctors.filter((doctor) => {
+  const filteredPatients = storedPatients.filter((patient) => {
   const term = searchTerm.toLowerCase().trim();
       if (!term) return true;
-      const nameWords = doctor.name.toLowerCase().trim().split(/\s+/);
-      const specialityWords = doctor.speciality.toLowerCase().trim().split(/\s+/);
+      const nameWords = patient.name.toLowerCase().trim().split(/\s+/);
       const nameMatch = nameWords.some(word => word.startsWith(term));
-      const specialityMatch = specialityWords.some(word => word.startsWith(term));
     
-      return nameMatch || specialityMatch;
+      return nameMatch;
     });
-    const totalPages = Math.ceil(filteredDoctors.length / perPage)
-    const currentDoctors = filteredDoctors.slice((currentPage-1)*perPage, currentPage*perPage)
+    const totalPages = Math.ceil(filteredPatients.length / perPage)
+    const currentPatients = filteredPatients.slice((currentPage-1)*perPage, currentPage*perPage)
 
   const handleSearch = (value:React.SetStateAction<string>) => {
     setSearchTerm(value);
@@ -44,11 +39,11 @@ useEffect(() => {
 
   return (
     <div>
-      <h1 className='text-xl md:text-2xl lg:text-3xl text-blue-900 font-semibold  bg-blue-300 w-full py-4 px-8 shadow-md rounded-md mt-2 mb-6 flex items-center justify-between gap-4'>My Doctors<MenuSquare size={30} className='block lg:hidden cursor-pointer' onClick={()=>setOpenMobileSidebar(prev=> !prev)}/></h1>
-      <ResponsiveSearch searchTerm={searchTerm} setSearchTerm={handleSearch} placeholderText='Search doctor by name or speciality...' />
-        {filteredDoctors.length === 0 ? (
+      <h1 className='text-xl md:text-2xl lg:text-3xl text-blue-900 font-semibold  bg-blue-300 w-full py-4 px-8 shadow-md rounded-md mt-2 mb-6 flex items-center justify-between gap-4'>My Patients<MenuSquare size={30} className='block lg:hidden cursor-pointer' onClick={()=>setOpenMobileSidebar(prev=> !prev)}/></h1>
+      <ResponsiveSearch searchTerm={searchTerm} setSearchTerm={handleSearch} placeholderText='Search patient by name ...' />
+        {filteredPatients.length === 0 ? (
               <div className="flex items-center justify-center  gap-3 text-gray-600 text-base md:text-lg font-semibold">
-                 <p className="text-center text-gray-500 mt-50 text-lg">No doctors found.</p>
+                 <p className="text-center text-gray-500 mt-50 text-lg">No Patient found.</p>
               </div>
               ) :  (
             <>
@@ -61,12 +56,12 @@ useEffect(() => {
                 lg:grid-cols-4
                 gap-5
               ">
-                {currentDoctors.map((doctor) => (
-                  <DoctorDisplayCard key={doctor._id} {...doctor} />
+                {currentPatients.map((patient) => (
+                  <PatientDisplayCard key={patient._id} {...patient} />
                 ))}
               </div>
       
-              {filteredDoctors.length > perPage && (
+              {filteredPatients.length > perPage && (
                 <div className="flex flex-wrap justify-center items-center gap-4 mt-10">
                   <button
                     disabled={currentPage === 1}
@@ -110,4 +105,4 @@ useEffect(() => {
   )
 }
 
-export default MyDoctors
+export default MyPatients

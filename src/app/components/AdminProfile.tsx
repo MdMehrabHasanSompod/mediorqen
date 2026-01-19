@@ -20,16 +20,14 @@ const UserProfile = ({setOpenMobileSidebar}:propType) => {
   const session = useSession()
   const setUser = useUserStore((state)=>state.setUser)
   const [updateProfile,setUpdateProfile] = useState<boolean>(false)
-  const [updatedAvatar,setUpdatedAvatar] = useState<File | null >(null)
-  const [displayUpdatedAvatar, setDisplayUpdatedAvatar] = useState<string | undefined>(user?.avatar as string | undefined)
-  const [updatedName,setUpdatedName] = useState<string>(user?.name as string || "")
-  const [updatedPhone,setUpdatedPhone] = useState<string>(user?.phone as string || "")
-  const [updatedGender,setUpdatedGender] = useState<string>(user?.gender as string || "")
-  const [updatedAge,setUpdatedAge] = useState<string>(user?.age?.toString() as string || "")
-  const [updatedBloodGroup,setUpdatedBloodGroup] = useState<string>(user?.bloodGroup as string || "")
-  const [updateLoading,setUpdateLoading] =  useState<boolean>(false)
-  const [addAccountLoading,setAddAccountLoading] =  useState<boolean>(false)
-  const [deleteLoading,setDeleteLoading] =  useState<boolean>(false)
+  const [updatedAvatar,setUpdatedAvatar] = useState<File | null >()
+  const [displayUpdatedAvatar, setDisplayUpdatedAvatar] = useState<string | undefined>(user?.avatar as string)
+  const [updatedName,setUpdatedName] = useState<string>(user?.name as string)
+  const [updatedPhone,setUpdatedPhone] = useState<string>(user?.phone as string)
+  const [updatedGender,setUpdatedGender] = useState<string>(user?.gender as string)
+  const [updatedAge,setUpdatedAge] = useState<string>(user?.age?.toString() as string)
+  const [updatedBloodGroup,setUpdatedBloodGroup] = useState<string>(user?.bloodGroup as string)
+  const [loading,setLoading] =  useState<boolean>(false)
   const [removeAvatar, setRemoveAvatar] = useState<boolean>(false);
   const router = useRouter()
 
@@ -52,7 +50,7 @@ const UserProfile = ({setOpenMobileSidebar}:propType) => {
   const handleUserUpdate = async(e:FormEvent) => {
     e.preventDefault()
     try {
-      setUpdateLoading(true)
+      setLoading(true)
       const formData = new FormData();
      if (user?._id) formData.append("id",user._id)
      if (updatedName !== user?.name) formData.append("updatedName", updatedName);
@@ -69,38 +67,36 @@ const UserProfile = ({setOpenMobileSidebar}:propType) => {
 
       if(result.data.success){
           setUser(result.data.updatedUser)
-        setUpdatedName(result.data.updatedUser.name || "");
-        setUpdatedPhone(result.data.updatedUser.phone || "");
-        setUpdatedGender(result.data.updatedUser.gender || "");
-        setUpdatedAge(result.data.updatedUser.age || "");
-        setUpdatedBloodGroup(result.data.updatedUser.bloodGroup || "");
-        setDisplayUpdatedAvatar(result.data.updatedUser.avatar || undefined);
+        setUpdatedName(result.data.updatedUser.name);
+        setUpdatedPhone(result.data.updatedUser.phone);
+        setUpdatedGender(result.data.updatedUser.gender);
+        setUpdatedAge(result.data.updatedUser.age);
+        setUpdatedBloodGroup(result.data.updatedUser.bloodGroup);
+        setDisplayUpdatedAvatar(result.data.updatedUser.avatar);
         setUpdatedAvatar(null); 
         setRemoveAvatar(false);
       }
       
-      setUpdateLoading(false)
+      setLoading(false)
       setUpdateProfile(false)
 
 
     } catch (error) {
-      setUpdateLoading(false)
+      setLoading(false)
       console.log(error);
     }
   }
 
 const handleAddAccount = async () => {
-  setAddAccountLoading(true)
   await signOut({ redirect: false });
   router.push("/register");
-  setAddAccountLoading(false)
 };
 
 const handleDeleteAccount = async() => {
-     setDeleteLoading(true)
+     setLoading(true)
   try {
     const result = await fetch(`/api/user/delete-account?id=${user?._id}&role=${session.data?.user.role}`,{method:"DELETE"})
-    setDeleteLoading(false) 
+    setLoading(false) 
     if(result.ok){
       await signOut({ redirect: false });
        router.push("/")
@@ -108,7 +104,7 @@ const handleDeleteAccount = async() => {
  
   } catch (error) {
     console.log(error);
-    setDeleteLoading(false)
+    setLoading(false)
   }
 }
 
@@ -223,7 +219,7 @@ const handleDeleteAccount = async() => {
                       </div>
                       <div className='my-10 flex items-center justify-around gap-3'>
                         <button onClick={()=>setUpdateProfile(false)} className='bg-red-500 shadow-md px-4 py-2 rounded-md text-white font-semibold cursor-pointer hover:bg-red-600'>Cancel Update</button>
-                        <button onClick={handleUserUpdate} className='bg-green-500 shadow-md px-4 py-2 rounded-md flex items-center justify-center gap-1 text-white font-semibold cursor-pointer hover:bg-green-600'>{updateLoading && <Loader2 size={18} className='animate-spin' />}Save Update</button>
+                        <button onClick={handleUserUpdate} className='bg-green-500 shadow-md px-4 py-2 rounded-md flex items-center justify-center gap-1 text-white font-semibold cursor-pointer hover:bg-green-600'>{loading && <Loader2 size={18} className='animate-spin' />}Save Update</button>
                       </div>
           </div>
        </>) :(<>
@@ -251,7 +247,7 @@ const handleDeleteAccount = async() => {
         <h2 className='text-blue-900 text-2xl font-semibold text-center flex items-center justify-center gap-1'><Wrench size={24}/> Manage Account</h2>
         <div className='flex flex-col md:flex-row items-center justify-center gap-6 mt-10'>
           <button onClick={()=> signOut()} className='bg-red-500 shadow-md p-3 rounded-md flex items-center justify-center gap-1 text-white font-semibold cursor-pointer hover:bg-red-600'><LogOut size={18}/>Logout Now</button>
-          <button onClick={handleAddAccount} className='bg-yellow-500 shadow-md p-3 rounded-md flex items-center justify-center gap-1 text-white font-semibold cursor-pointer hover:bg-yellow-600'>{addAccountLoading?<Loader2 size={18} className='animate-spin' />: <PlusCircle size={18}/>} Add Account</button>
+          <button onClick={handleAddAccount} className='bg-yellow-500 shadow-md p-3 rounded-md flex items-center justify-center gap-1 text-white font-semibold cursor-pointer hover:bg-yellow-600'>{loading?<Loader2 size={18} className='animate-spin' />: <PlusCircle size={18}/>} Add Account</button>
         </div>
      </div>
      <hr className="text-blue-500 bg-blue-500 h-0.5" />
@@ -259,7 +255,7 @@ const handleDeleteAccount = async() => {
         <h2 className='text-blue-900 text-2xl font-semibold text-center flex items-center justify-center gap-1'><Settings size={24}/> Account Settings</h2>
         <div className='flex flex-col md:flex-row items-center justify-center gap-6 mt-10'>
           <button onClick={()=>router.push("/user/reset-password")} className='bg-blue-500 shadow-md p-3 rounded-md flex items-center justify-center gap-1 text-white font-semibold cursor-pointer hover:bg-blue-600'><RotateCcw size={18}/> Reset Password</button>
-          <button onClick={handleDeleteAccount} className='bg-red-500 shadow-md p-3 rounded-md flex items-center justify-center gap-1 text-white font-semibold cursor-pointer hover:bg-red-600'>{deleteLoading?<Loader2 size={18} className='animate-spin' />: <Trash2 size={18}/>}  Delete Account</button>
+          <button onClick={handleDeleteAccount} className='bg-red-500 shadow-md p-3 rounded-md flex items-center justify-center gap-1 text-white font-semibold cursor-pointer hover:bg-red-600'>{loading?<Loader2 size={18} className='animate-spin' />: <Trash2 size={18}/>}  Delete Account</button>
         </div>
      </div>
    

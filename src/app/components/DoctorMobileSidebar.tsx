@@ -9,7 +9,7 @@ type propType = {
   setOpenMobileSidebar: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const UserMobileSidebar = ({setCurrentMenu,setOpenMobileSidebar}:propType) => {
+const DoctorMobileSidebar = ({setCurrentMenu,setOpenMobileSidebar}:propType) => {
       const router = useRouter()
 
 
@@ -35,19 +35,19 @@ const UserMobileSidebar = ({setCurrentMenu,setOpenMobileSidebar}:propType) => {
             Dashboard
             </p>
           </div>   
-          <div className="flex items-center justify-start gap-1 hover:bg-blue-200 cursor-pointer text-blue-900 hover:text-blue-800  transition-opacity duration-600 px-2 lg:px-4 py-3" onClick={()=>setCurrentMenu("appointments")}>
+          <div className="flex items-center justify-start gap-1 hover:bg-blue-200 cursor-pointer text-blue-900 hover:text-blue-800  transition-opacity duration-600 px-2 lg:px-4 py-3" onClick={()=>setCurrentMenu("doctor-appointments")}>
             <ClipboardPlus className='w-6 h-6'/>
             <p className="text-md lg:text-lg transition-opacity duration-300">
             Appointments
             </p>
           </div>  
-         <div className="flex items-center justify-start gap-1 hover:bg-blue-200 cursor-pointer text-blue-900 hover:text-blue-800  transition-opacity duration-600 px-2 lg:px-4 py-3" onClick={()=>setCurrentMenu("my-doctor")}>
+         <div className="flex items-center justify-start gap-1 hover:bg-blue-200 cursor-pointer text-blue-900 hover:text-blue-800  transition-opacity duration-600 px-2 lg:px-4 py-3" onClick={()=>setCurrentMenu("my-patients")}>
             <BriefcaseMedical className='w-6 h-6'/>
             <p className="text-md lg:text-lg transition-opacity duration-300">
-            My Doctors
+            My Patients
             </p>
           </div>  
-         <div className="flex items-center justify-start gap-1 hover:bg-blue-200 cursor-pointer text-blue-900 hover:text-blue-800  transition-opacity duration-600 px-2 lg:px-4 py-3" onClick={()=>setCurrentMenu("profile")}>
+         <div className="flex items-center justify-start gap-1 hover:bg-blue-200 cursor-pointer text-blue-900 hover:text-blue-800  transition-opacity duration-600 px-2 lg:px-4 py-3" onClick={()=>setCurrentMenu("doctor-profile")}>
             <User className='w-6 h-6'/>
             <p className="text-md lg:text-lg transition-opacity duration-300">
             Profile
@@ -69,4 +69,4 @@ const UserMobileSidebar = ({setCurrentMenu,setOpenMobileSidebar}:propType) => {
   )
 }
 
-export default UserMobileSidebar
+export default DoctorMobileSidebar
