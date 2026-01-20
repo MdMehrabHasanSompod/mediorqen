@@ -1,5 +1,5 @@
 import { IPublicDoctor } from '@/types/public-doctor';
-import { Mail, PhoneCall } from 'lucide-react';
+import { Mail, PhoneCall, User } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
@@ -21,13 +21,13 @@ const DoctorDisplayCard = ({ name, speciality, qualifications, image,availabilit
         </span>
       </div>
       <div className="w-36 h-36 sm:w-40 sm:h-40 mt-6 lg:w-50 lg:h-50 rounded-full overflow-hidden border-4 border-blue-400 mb-5">
-        <Image
+        {image ? <Image
           src={image}
           alt={name}
           width={400}
           height={400}
           className="object-cover w-full h-full"
-        />
+        /> : <User  className="object-cover w-full h-full bg-blue-600 text-white"/>}
       </div>
 
       <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-800">

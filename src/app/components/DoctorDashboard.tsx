@@ -1,10 +1,11 @@
 "use client"
 import React, { useState } from 'react'
-import { FileEdit, Heart, HeartHandshake, Loader2, LucideClipboardPenLine, MenuSquare, Microscope, PlusCircle, Users} from 'lucide-react'
+import {  Heart,  Loader2, MenuSquare} from 'lucide-react'
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { useDoctorStore } from '@/src/store/doctor.store';
+import { IDoctor } from '@/types/doctor';
 
 type propType = {
   setOpenMobileSidebar: React.Dispatch<React.SetStateAction<boolean>>
@@ -15,9 +16,10 @@ const DoctorDashboard = ({setOpenMobileSidebar}:propType) => {
   const router = useRouter()
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const doctor = useDoctorStore((state)=> state.doctor)
+  const setDoctor = useDoctorStore((state)=>state.setDoctor)
   const setDoctorAppointments = useDoctorStore((state)=>state.setAppointments)
   const doctorAppointments = useDoctorStore((state)=>state.appointments)
-
+  
   const nextAppointment = useDoctorStore((state) => {
   const now = new Date();
 
@@ -49,7 +51,7 @@ const DoctorDashboard = ({setOpenMobileSidebar}:propType) => {
     try {
       setLoadingId(appointmentId)
       const result = await axios.patch("/api/doctor/cancel-appointment",{
-        id: doctor?._id, role: session.data?.user.role, appointmentId
+        doctorId: doctor?._id, role: session.data?.user.role, appointmentId
       })
       
       if(result.data.success){
@@ -63,6 +65,29 @@ const DoctorDashboard = ({setOpenMobileSidebar}:propType) => {
       setLoadingId(null)
     }
   }
+
+  const toggleAvailability = async () => {
+  try {
+
+    const newStatus = doctor?.availability === true ? false : true ;
+
+    const result = await axios.patch("/api/doctor/update-availability", {
+      doctorId: doctor?._id,
+      role: session.data?.user.role,
+      availability: newStatus,
+    });
+
+    if (!doctor) return;
+  
+    if (result.data.success) {
+     const updatedDoctor = result.data.updatedDoctor as IDoctor;
+      setDoctor({...doctor, availability : updatedDoctor.availability })
+    }
+
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   return (
     <div className='w-full mx-auto overflow-x-hidden'>
@@ -97,21 +122,38 @@ const DoctorDashboard = ({setOpenMobileSidebar}:propType) => {
        </div>) : (<p className='text-center text-gray-600 mt-10'>No Appointment Found</p>)
      }
       </div>
-       <div className='flex-1 flex-col gap-2 w-full md:w-[80%] mx-auto bg-blue-50 shadow-lg p-5 rounded-lg'>
-        <h3 className='text-xl text-center text-blue-900 mt-5 font-semibold'>Quick Actions</h3>
-        <div className='flex flex-col lg:flex-row gap-3 mt-5 items-center justify-center'>
-        <button onClick={()=>router.push("/doctors")} className='bg-blue-200 w-full flex items-center justify-center gap-1 rounded-full px-4 py-2 cursor-pointer hover:bg-blue-300 text-blue-900 font-semibold hover:scale-105 transition-transform duration-500'><PlusCircle size={20}/>Book Appointment</button>
-        <button onClick={()=>router.push("/user/prescriptions")} className='bg-blue-200 w-full flex items-center justify-center gap-1 rounded-full px-4 py-2 cursor-pointer hover:bg-blue-300 text-blue-900 font-semibold hover:scale-105 transition-transform duration-500'><LucideClipboardPenLine size={20}/>View Prescriptions</button>
-        </div>
-        <div className='flex flex-col lg:flex-row gap-3 mt-5 items-center justify-center'>
-        <button onClick={()=>router.push("/user/test-reports")} className='bg-blue-200 w-full flex items-center justify-center gap-1 rounded-full px-4 py-2 cursor-pointer hover:bg-blue-300 text-blue-900 font-semibold hover:scale-105 transition-transform duration-500'><Microscope size={20}/>View Test Reports</button>
-        <button onClick={()=>router.push("/bootcamps")} className='bg-blue-200 w-full flex items-center justify-center gap-1 rounded-full px-4 py-2 cursor-pointer hover:bg-blue-300 text-blue-900 font-semibold hover:scale-105 transition-transform duration-500'><Users size={20}/> Join Bootcamps</button>
-        </div>
-        <div className='flex flex-col lg:flex-row gap-3 mt-5 items-center justify-center'>
-        <button onClick={()=>router.push("/user/test-reports")} className='bg-blue-200 w-full flex items-center justify-center gap-1 rounded-full px-4 py-2 cursor-pointer hover:bg-blue-300 text-blue-900 font-semibold hover:scale-105 transition-transform duration-500'><FileEdit size={20}/>Feedback</button>
-        <button onClick={()=>router.push("/contact")} className='bg-blue-200 w-full flex items-center justify-center gap-1 rounded-full px-4 py-2 cursor-pointer hover:bg-blue-300 text-blue-900 font-semibold hover:scale-105 transition-transform duration-500'><HeartHandshake size={20}/> Contact</button>
-        </div>
-       </div>
+      <div className="flex-1 w-full md:w-[80%] mx-auto bg-blue-50 shadow-md p-6 rounded-xl">
+  <h3 className="text-2xl font-semibold text-center text-blue-900 mb-6">
+    Quick Actions
+  </h3>
+  <div className="flex flex-col lg:flex-row items-center justify-center gap-6">
+<div className="flex items-center gap-3 text-md lg:text-lg font-semibold text-blue-900">
+  <p>Set Availability:</p>
+
+  <div
+    onClick={toggleAvailability}
+    className="flex items-center gap-2 bg-blue-100 px-4 py-2 rounded-lg cursor-pointer select-none"
+  >
+    <span
+      className={`w-3 h-3 rounded-full ${
+        doctor?.availability
+          ? 'bg-green-500 animate-[ping_2s_linear_2s_infinite]'
+          : 'bg-red-700'
+      }`}
+    ></span>
+    <span
+      className={`font-semibold ${
+        doctor?.availability ? 'text-green-600' : 'text-red-600'
+      }`}
+    >
+      {doctor?.availability ? 'Available' : 'Unavailable'}
+    </span>
+  </div>
+</div>
+
+
+  </div>
+</div>
     </div>
     </div>
   )
