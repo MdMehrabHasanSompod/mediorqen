@@ -1,7 +1,7 @@
 "use client"
 import { useDoctorStore } from '@/src/store/doctor.store';
 import axios from 'axios';
-import { Loader2, LogOut, MenuSquare, PlusCircle, RotateCcw, Settings, Trash2, UploadIcon, User, Wrench, X } from 'lucide-react'
+import { Loader2, LogOut, MenuSquare, PlusCircle, RotateCcw, Trash2, UploadIcon, User, Wrench, X } from 'lucide-react'
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image'
 import { useRouter } from 'next/navigation';
@@ -25,10 +25,8 @@ const DoctorProfile = ({setOpenMobileSidebar}:propType) => {
   const [displayUpdatedAvatar, setDisplayUpdatedAvatar] = useState<string | undefined>(doctor?.image as string | undefined)
   const [updatedName,setUpdatedName] = useState<string>(doctor?.name as string || "")
   const [updatedPhone,setUpdatedPhone] = useState<string>(doctor?.phone as string || "")
-  const [updatedFees,setUpdatedFees] = useState<number>(doctor?.fees as number)
+  const [updatedFees,setUpdatedFees] = useState<number>(doctor?.fees as number || 0)
   const [updateLoading,setUpdateLoading] =  useState<boolean>(false)
-  const [addAccountLoading,setAddAccountLoading] =  useState<boolean>(false)
-  const [deleteLoading,setDeleteLoading] =  useState<boolean>(false)
   const [removeAvatar, setRemoveAvatar] = useState<boolean>(false);
   const router = useRouter();
   const [qualifications, setQualifications] = useState<IQualification[]>(doctor?.qualifications || []);
@@ -58,10 +56,14 @@ const DoctorProfile = ({setOpenMobileSidebar}:propType) => {
     };
   
     const removeQualification = (index: number) => {
-      setQualifications((prev) => prev.filter((_, i) => i !== index));
+      const newQualifications = qualifications.filter((_, i) => i !== index);
+      setQualifications(newQualifications);
     };
 
     const removeImage = () => {
+     if (displayUpdatedAvatar && displayUpdatedAvatar.startsWith("blob:")) {
+      URL.revokeObjectURL(displayUpdatedAvatar);
+     }
       setDisplayUpdatedAvatar(undefined);
       setUpdatedAvatar(null);
       const input = document.getElementById("image") as HTMLInputElement | null;
@@ -73,24 +75,40 @@ const DoctorProfile = ({setOpenMobileSidebar}:propType) => {
       const files = e.target.files;
       if (!files || files.length === 0) return;
       const file = files[0];
+       if (displayUpdatedAvatar && displayUpdatedAvatar.startsWith("blob:")) {
+       URL.revokeObjectURL(displayUpdatedAvatar);
+      }
       setUpdatedAvatar(file);
       setDisplayUpdatedAvatar(URL.createObjectURL(file));
     };
-  
-  const handleUserUpdate = async(e:FormEvent) => {
+
+    
+  const handleDoctorUpdate = async(e:FormEvent) => {
     e.preventDefault()
+
+    const validQualifications = qualifications.filter(
+      (q) => q.degree.trim() && q.institution.trim()
+    );
+
+    if (validQualifications.length === 0) {
+    setQualificationError("At least one qualification is required");
+    return;
+  }
+      setQualificationError("");
+
     try {
       setUpdateLoading(true)
       const formData = new FormData();
      if (doctor?._id) formData.append("id",doctor._id)
+     if (session.data?.user.id) formData.append("userId",session.data?.user.id)
      if (updatedName !== doctor?.name) formData.append("updatedName", updatedName);
      if (updatedPhone !== doctor?.phone) formData.append("updatedPhone", updatedPhone);
      if (updatedFees !== doctor?.fees) formData.append("updatedFees", updatedFees.toString());
-     if (updatedPhone !== doctor?.phone) formData.append("updatedPhone", updatedPhone);
+     if (JSON.stringify(qualifications) !== JSON.stringify(doctor?.qualifications)) formData.append("updatedQualifications",JSON.stringify(validQualifications))
      if (updatedAvatar) formData.append("updatedAvatar", updatedAvatar);
      if (removeAvatar) formData.append("removeAvatar", "true");
       
-      const result = await axios.patch("/api/user/update-user",formData)
+      const result = await axios.patch("/api/doctor/update-profile",formData)
 
       console.log(result);
 
@@ -99,6 +117,8 @@ const DoctorProfile = ({setOpenMobileSidebar}:propType) => {
         setUpdatedName(result.data.updatedDoctor.name || "");
         setUpdatedPhone(result.data.updatedDoctor.phone || "");
         setDisplayUpdatedAvatar(result.data.updatedDoctor.image || undefined);
+        setUpdatedFees(result.data.updatedDoctor.fees || 0);
+        setQualifications(result.data.updatedDoctor.qualifications || [])
         setUpdatedAvatar(null); 
         setRemoveAvatar(false);
       }
@@ -112,29 +132,6 @@ const DoctorProfile = ({setOpenMobileSidebar}:propType) => {
       console.log(error);
     }
   }
-
-const handleAddAccount = async () => {
-  setAddAccountLoading(true)
-  await signOut({ redirect: false });
-  router.push("/register");
-  setAddAccountLoading(false)
-};
-
-const handleDeleteAccount = async() => {
-     setDeleteLoading(true)
-  try {
-    const result = await fetch(`/api/user/delete-account?id=${doctor?._id}&role=${session.data?.user.role}`,{method:"DELETE"})
-    setDeleteLoading(false) 
-    if(result.ok){
-      await signOut({ redirect: false });
-       router.push("/")
-    }
- 
-  } catch (error) {
-    console.log(error);
-    setDeleteLoading(false)
-  }
-}
 
 const handleCancelUpdate = () => {
   setUpdateProfile(false);
@@ -155,7 +152,7 @@ const handleCancelUpdate = () => {
       <div className='w-full flex flex-col md:flex-row mt-10 gap-4'>
       <div className='m-2 flex flex-col flex-1 gap-3'>
       <div className='bg-blue-200 p-6 rounded-lg flex flex-col gap-2'>
-       {updateProfile ? (<>
+       {updateProfile ? (<form onSubmit={handleDoctorUpdate}>
           <div className='bg-blue-50 p-6 rounded-lg flex flex-col gap-3'>
             <div>
               <input
@@ -170,10 +167,12 @@ const handleCancelUpdate = () => {
             </div>
             <div>
               <input
-                type="text"
+                type="tel"
                 name="updatedPhone"
                 placeholder="New Phone"
                 className="form-input"
+                minLength={11}
+                maxLength={13}
                 value={updatedPhone}
                 onChange={(e) => setUpdatedPhone(e.target.value)}
                 required
@@ -186,6 +185,8 @@ const handleCancelUpdate = () => {
                 placeholder="Consultation Fees"
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition text-sm"
                 value={updatedFees}
+                min={10}
+                max={2000} 
                 onChange={(e) => setUpdatedFees(Number(e.target.value))}
                 required
               />
@@ -287,10 +288,10 @@ const handleCancelUpdate = () => {
                       </div>
                       <div className='my-10 flex items-center justify-around gap-3'>
                         <button onClick={handleCancelUpdate} className='bg-red-500 shadow-md px-4 py-2 rounded-md text-white font-semibold cursor-pointer hover:bg-red-600'>Cancel Update</button>
-                        <button onClick={handleUserUpdate} className='bg-green-500 shadow-md px-4 py-2 rounded-md flex items-center justify-center gap-1 text-white font-semibold cursor-pointer hover:bg-green-600'>{updateLoading && <Loader2 size={18} className='animate-spin' />}Save Update</button>
+                        <button type='submit' className='bg-green-500 shadow-md px-4 py-2 rounded-md flex items-center justify-center gap-1 text-white font-semibold cursor-pointer hover:bg-green-600'>{updateLoading && <Loader2 size={18} className='animate-spin' />}Save Update</button>
                       </div>
           </div>
-       </>) :(<>
+       </form>) :(<>
        <div className='bg-blue-200 p-6 rounded-lg flex flex-col gap-2'>
           <div className="w-36 h-36 sm:w-40 sm:h-40 mt-6 lg:w-50 lg:h-50 rounded-full overflow-hidden border-4 border-blue-400 mb-5 mx-auto">
             {doctor?.image ? <Image className="object-cover w-full h-full" src={doctor?.image} alt={doctor?.name} width={200} height={200}/>
@@ -327,18 +328,9 @@ const handleCancelUpdate = () => {
         <h2 className='text-blue-900 text-2xl font-semibold text-center flex items-center justify-center gap-1'><Wrench size={24}/> Manage Account</h2>
         <div className='flex flex-col md:flex-row items-center justify-center gap-6 mt-10'>
           <button onClick={()=> signOut()} className='bg-red-500 shadow-md p-3 rounded-md flex items-center justify-center gap-1 text-white font-semibold cursor-pointer hover:bg-red-600'><LogOut size={18}/>Logout Now</button>
-          <button onClick={handleAddAccount} className='bg-yellow-500 shadow-md p-3 rounded-md flex items-center justify-center gap-1 text-white font-semibold cursor-pointer hover:bg-yellow-600'>{addAccountLoading?<Loader2 size={18} className='animate-spin' />: <PlusCircle size={18}/>} Add Account</button>
-        </div>
-     </div>
-     <hr className="text-blue-500 bg-blue-500 h-0.5" />
-     <div className='mt-10'>
-        <h2 className='text-blue-900 text-2xl font-semibold text-center flex items-center justify-center gap-1'><Settings size={24}/> Account Settings</h2>
-        <div className='flex flex-col md:flex-row items-center justify-center gap-6 mt-10'>
           <button onClick={()=>router.push("/user/reset-password")} className='bg-blue-500 shadow-md p-3 rounded-md flex items-center justify-center gap-1 text-white font-semibold cursor-pointer hover:bg-blue-600'><RotateCcw size={18}/> Reset Password</button>
-          <button onClick={handleDeleteAccount} className='bg-red-500 shadow-md p-3 rounded-md flex items-center justify-center gap-1 text-white font-semibold cursor-pointer hover:bg-red-600'>{deleteLoading?<Loader2 size={18} className='animate-spin' />: <Trash2 size={18}/>}  Delete Account</button>
         </div>
-     </div>
-   
+     </div>   
       </div>
     </div>
     </div>

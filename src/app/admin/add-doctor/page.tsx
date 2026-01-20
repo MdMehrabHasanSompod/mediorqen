@@ -94,6 +94,9 @@ const AddDoctor = () => {
   };
 
   const removeImage = () => {
+  if (displayImage && displayImage.startsWith("blob:")) {
+    URL.revokeObjectURL(displayImage);
+  }
     setDisplayImage(null);
     setFormImage(null);
     const input = document.getElementById("image") as HTMLInputElement | null;
@@ -104,6 +107,9 @@ const AddDoctor = () => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
     const file = files[0];
+  if (displayImage && displayImage.startsWith("blob:")) {
+    URL.revokeObjectURL(displayImage);
+  }
     setFormImage(file);
     setDisplayImage(URL.createObjectURL(file));
   };
@@ -249,6 +255,8 @@ const AddDoctor = () => {
                 placeholder="Consultation Fees"
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition text-sm"
                 value={fees}
+                min={10}
+                max={2000}
                 onChange={(e) => setFees(e.target.value)}
                 required
               />

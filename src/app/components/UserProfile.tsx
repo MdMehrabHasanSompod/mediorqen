@@ -119,7 +119,7 @@ const handleDeleteAccount = async() => {
       <div className='w-full flex flex-col md:flex-row mt-10 gap-4'>
       <div className='m-2 flex flex-col flex-1 gap-3'>
       <div className='bg-blue-200 p-6 rounded-lg flex flex-col gap-2'>
-       {updateProfile ? (<>
+       {updateProfile ? (<form onSubmit={handleUserUpdate}>
           <div className='bg-blue-50 p-6 rounded-lg flex flex-col gap-3'>
             <div>
               <input
@@ -223,10 +223,10 @@ const handleDeleteAccount = async() => {
                       </div>
                       <div className='my-10 flex items-center justify-around gap-3'>
                         <button onClick={()=>setUpdateProfile(false)} className='bg-red-500 shadow-md px-4 py-2 rounded-md text-white font-semibold cursor-pointer hover:bg-red-600'>Cancel Update</button>
-                        <button onClick={handleUserUpdate} className='bg-green-500 shadow-md px-4 py-2 rounded-md flex items-center justify-center gap-1 text-white font-semibold cursor-pointer hover:bg-green-600'>{updateLoading && <Loader2 size={18} className='animate-spin' />}Save Update</button>
+                        <button type='submit' className='bg-green-500 shadow-md px-4 py-2 rounded-md flex items-center justify-center gap-1 text-white font-semibold cursor-pointer hover:bg-green-600'>{updateLoading && <Loader2 size={18} className='animate-spin' />}Save Update</button>
                       </div>
           </div>
-       </>) :(<>
+       </form>) :(<>
        <div className='bg-blue-200 p-6 rounded-lg flex flex-col gap-2'>
           <div className="w-36 h-36 sm:w-40 sm:h-40 mt-6 lg:w-50 lg:h-50 rounded-full overflow-hidden border-4 border-blue-400 mb-5 mx-auto">
             {user?.avatar ? <Image className="object-cover w-full h-full" src={user?.avatar} alt={user?.name} width={200} height={200}/>
