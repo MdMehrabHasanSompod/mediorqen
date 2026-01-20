@@ -12,6 +12,7 @@ type propType = {
 const DoctorAppointments = ({setOpenMobileSidebar}:propType) => {
   const appointments = useDoctorStore((state)=>state.appointments)
   const setAppointments = useDoctorStore((state)=>state.setAppointments)
+  const doctor = useDoctorStore((state)=>state.doctor)
   const session = useSession()
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const upcomingAppointments = appointments.filter(
@@ -28,7 +29,7 @@ const DoctorAppointments = ({setOpenMobileSidebar}:propType) => {
     try {
       setLoadingId(appointmentId)
       const result = await axios.patch("/api/doctor/cancel-appointment",{
-        userId: session.data?.user.id, role: session.data?.user.role, appointmentId
+       id: doctor?._id, role: session.data?.user.role, appointmentId
       })
       
       if(result.data.success){

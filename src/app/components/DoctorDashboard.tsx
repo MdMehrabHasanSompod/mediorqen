@@ -14,6 +14,7 @@ const DoctorDashboard = ({setOpenMobileSidebar}:propType) => {
   const session = useSession()
   const router = useRouter()
   const [loadingId, setLoadingId] = useState<string | null>(null);
+  const doctor = useDoctorStore((state)=> state.doctor)
   const setDoctorAppointments = useDoctorStore((state)=>state.setAppointments)
   const doctorAppointments = useDoctorStore((state)=>state.appointments)
 
@@ -48,12 +49,12 @@ const DoctorDashboard = ({setOpenMobileSidebar}:propType) => {
     try {
       setLoadingId(appointmentId)
       const result = await axios.patch("/api/doctor/cancel-appointment",{
-        userId: session.data?.user.id, role: session.data?.user.role, appointmentId
+        id: doctor?._id, role: session.data?.user.role, appointmentId
       })
       
       if(result.data.success){
         const updatedDoctorAppointments = doctorAppointments.map((appointment)=>appointment._id === appointmentId ? {...appointment,status:"Cancelled" as const}:appointment)
-        setDoctorAppointments(updatedDoctorAppointments)
+        setDoctorAppointments([...updatedDoctorAppointments])
       }
 
      setLoadingId(null)
