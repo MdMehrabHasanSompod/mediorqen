@@ -15,7 +15,7 @@ const MyPatients = ({setOpenMobileSidebar}:propType) => {
   const storedPatients = Array.from(new Map(doctorAppointments.map(a => [a.patientId._id, a.patientId])).values());
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [searchTerm, setSearchTerm] = useState<string>("")
-  const perPage = 5;
+  const perPage = 20;
   const filteredPatients = storedPatients.filter((patient) => {
   const term = searchTerm.toLowerCase().trim();
       if (!term) return true;

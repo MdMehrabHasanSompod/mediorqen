@@ -3,23 +3,18 @@ import { MenuSquare } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import DoctorDisplayCard from './DoctorDisplayCard'
 import ResponsiveSearch from './ResponsiveSearch'
-import { useAppointmentStore } from '@/src/store/appointment.store'
 import { useDoctorsStore } from '@/src/store/doctors.store'
-
 
 type propType = {
   setOpenMobileSidebar: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const MyDoctors = ({setOpenMobileSidebar}:propType) => {
-  const storedDoctors = useDoctorsStore((s)=> s.doctors)
-  const userAppointments = useAppointmentStore((s) => s.appointments);
-  const bookedDoctorIds = new Set(userAppointments.map(a => a.doctorId._id));
-  const userDoctors = storedDoctors.filter(doctor =>bookedDoctorIds.has(doctor._id));
+  const doctors = useDoctorsStore((s)=> s.doctors)
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [searchTerm, setSearchTerm] = useState<string>("")
-  const perPage = 10;
-  const filteredDoctors = userDoctors.filter((doctor) => {
+  const perPage = 20;
+  const filteredDoctors = doctors.filter((doctor) => {
   const term = searchTerm.toLowerCase().trim();
       if (!term) return true;
       const nameWords = doctor.name.toLowerCase().trim().split(/\s+/);
@@ -44,7 +39,7 @@ useEffect(() => {
 
   return (
     <div>
-      <h1 className='text-xl md:text-2xl lg:text-3xl text-blue-900 font-semibold  bg-blue-300 w-full py-4 px-8 shadow-md rounded-md mt-2 mb-6 flex items-center justify-between gap-4'>My Doctors<MenuSquare size={30} className='block lg:hidden cursor-pointer' onClick={()=>setOpenMobileSidebar(prev=> !prev)}/></h1>
+      <h1 className='text-xl md:text-2xl lg:text-3xl text-blue-900 font-semibold  bg-blue-300 w-full py-4 px-8 shadow-md rounded-md mt-2 mb-6 flex items-center justify-between gap-4'>All Doctors<MenuSquare size={30} className='block lg:hidden cursor-pointer' onClick={()=>setOpenMobileSidebar(prev=> !prev)}/></h1>
       <ResponsiveSearch searchTerm={searchTerm} setSearchTerm={handleSearch} placeholderText='Search doctor by name or speciality...' />
         {filteredDoctors.length === 0 ? (
               <div className="flex items-center justify-center  gap-3 text-gray-600 text-base md:text-lg font-semibold">

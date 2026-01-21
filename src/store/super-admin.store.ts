@@ -1,5 +1,6 @@
 import { IAppointment } from "@/types/appointment";
 import { ISuperAdmin } from "@/types/super-admin";
+import { IUser } from "@/types/user";
 import { create } from "zustand";
 
 
@@ -10,6 +11,10 @@ interface SuperAdminStore {
   appointments: IAppointment[];
   setAppointments: (appointments:IAppointment[]) => void;
   clearAppointments: () => void;
+  users: IUser[];
+  setUsers: (users:IUser[]) => void;
+  clearUsers : () => void;
+  
 }
 
 export const useSuperAdminStore = create<SuperAdminStore>((set) => ({
@@ -19,4 +24,7 @@ export const useSuperAdminStore = create<SuperAdminStore>((set) => ({
   appointments: [],
   setAppointments: (appointments) => set({ appointments }),
   clearAppointments: () => set({ appointments: [] }),  
+  users : [],
+  setUsers: (users) => set({users}),
+  clearUsers: () => set({users:[]}) ,
 }));

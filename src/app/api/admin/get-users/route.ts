@@ -3,6 +3,7 @@ import connectDB from "@/src/app/lib/db";
 import { User } from "@/src/app/models/user.model";
 
 
+
 export const GET = async(request:NextRequest) => {
     try {
       const { searchParams } = new URL(request.url);
@@ -15,24 +16,18 @@ export const GET = async(request:NextRequest) => {
            )
         }
         await connectDB()
-        const existedAdmin = await User.findOne({_id:id,role}).lean();
-        
-         if (!existedAdmin) {
-         return NextResponse.json(
-          { success: false, message: "Admin not found" },
-           { status: 404 }
-        );
-      }
 
-        if(existedAdmin.role !== "admin"){
-            return NextResponse.json(
-            {success:false,message:"Attempted to Unauthorized Access"},
-            {status:401}
-           )
-        }
+        const Users = await User.find({}).sort({date:-1}).lean();
+
+        if (!Users) {
+        return NextResponse.json(
+        { success: false, message: "Users not found" },
+        { status: 404 }
+      );
+    }
 
         return NextResponse.json(
-            {success:true,message:"Admin Fetched Successfully",existedAdmin},
+            {success:true,message:"Users Fetched Successfully",Users},
             {status:200}
         )
     } catch (error) {

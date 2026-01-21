@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react'
-import { FileEdit, Heart, HeartHandshake, Loader2, LucideClipboardPenLine, MenuSquare, Microscope, PlusCircle, Users} from 'lucide-react'
+import { FileEdit, Heart, Loader2, LucideClipboardPenLine, MenuSquare, PlusCircle, ReplyAll} from 'lucide-react'
 import { useAppointmentStore } from '@/src/store/appointment.store';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -64,7 +64,7 @@ const Dashboard = ({setOpenMobileSidebar}:propType) => {
 
   return (
     <div className='w-full mx-auto overflow-x-hidden'>
-      <h1 className='text-xl md:text-2xl lg:text-3xl text-blue-900 font-semibold  bg-blue-300 w-full py-4 px-8 shadow-md rounded-md my-2 flex items-center justify-between gap-4'>Patient Dashboard<MenuSquare size={30} className='block lg:hidden cursor-pointer' onClick={()=>setOpenMobileSidebar(prev=> !prev)}/></h1>
+      <h1 className='text-xl md:text-2xl lg:text-3xl text-blue-900 font-semibold  bg-blue-300 w-full py-4 px-8 shadow-md rounded-md my-2 flex items-center justify-between gap-4'>Admin Dashboard<MenuSquare size={30} className='block lg:hidden cursor-pointer' onClick={()=>setOpenMobileSidebar(prev=> !prev)}/></h1>
       <div className='flex flex-col items-center justify-center gap-4 mt-10'>
         <p className='text-3xl font-semibold text-blue-900 flex items-center justify-center gap-1'>Welcome Back <Heart size={40} fill='red' strokeWidth={0}/></p>
         <p className='text-4xl font-bold text-blue-800'>{session.data?.user.name}</p>
@@ -101,16 +101,16 @@ const Dashboard = ({setOpenMobileSidebar}:propType) => {
        <div className='flex-1 flex-col gap-2 w-full md:w-[80%] mx-auto bg-blue-50 shadow-lg p-5 rounded-lg'>
         <h3 className='text-xl text-center text-blue-900 mt-5 font-semibold'>Quick Actions</h3>
         <div className='flex flex-col lg:flex-row gap-3 mt-5 items-center justify-center'>
-        <button onClick={()=>router.push("/doctors")} className='bg-blue-200 w-full flex items-center justify-center gap-1 rounded-full px-4 py-2 cursor-pointer hover:bg-blue-300 text-blue-900 font-semibold hover:scale-105 transition-transform duration-500'><PlusCircle size={20}/>Book Appointment</button>
-        <button onClick={()=>router.push("/user/prescriptions")} className='bg-blue-200 w-full flex items-center justify-center gap-1 rounded-full px-4 py-2 cursor-pointer hover:bg-blue-300 text-blue-900 font-semibold hover:scale-105 transition-transform duration-500'><LucideClipboardPenLine size={20}/>View Prescriptions</button>
+        <button onClick={()=>router.push("/admin/add-doctor")} className='bg-blue-200 w-full flex items-center justify-center gap-1 rounded-full px-4 py-2 cursor-pointer hover:bg-blue-300 text-blue-900 font-semibold hover:scale-102 transition-transform duration-500'><PlusCircle size={20}/>Add New Doctor</button>
+        <button onClick={()=>router.push("/user/prescriptions")} className='bg-blue-200 w-full flex items-center justify-center gap-1 rounded-full px-4 py-2 cursor-pointer hover:bg-blue-300 text-blue-900 font-semibold hover:scale-102 transition-transform duration-500'><LucideClipboardPenLine size={20}/>View Prescriptions</button>
         </div>
         <div className='flex flex-col lg:flex-row gap-3 mt-5 items-center justify-center'>
-        <button onClick={()=>router.push("/user/test-reports")} className='bg-blue-200 w-full flex items-center justify-center gap-1 rounded-full px-4 py-2 cursor-pointer hover:bg-blue-300 text-blue-900 font-semibold hover:scale-105 transition-transform duration-500'><Microscope size={20}/>View Test Reports</button>
-        <button onClick={()=>router.push("/bootcamps")} className='bg-blue-200 w-full flex items-center justify-center gap-1 rounded-full px-4 py-2 cursor-pointer hover:bg-blue-300 text-blue-900 font-semibold hover:scale-105 transition-transform duration-500'><Users size={20}/> Join Bootcamps</button>
+        <button onClick={()=>router.push("/admin/create-test")} className='bg-blue-200 w-full flex items-center justify-center gap-1 rounded-full px-4 py-2 cursor-pointer hover:bg-blue-300 text-blue-900 font-semibold hover:scale-102 transition-transform duration-500'><PlusCircle size={20}/>Create Test</button>
+        <button onClick={()=>router.push("/admin/create-bootcamp")} className='bg-blue-200 w-full flex items-center justify-center gap-1 rounded-full px-4 py-2 cursor-pointer hover:bg-blue-300 text-blue-900 font-semibold hover:scale-102 transition-transform duration-500'><PlusCircle size={20}/>Create Bootcamp</button>
         </div>
         <div className='flex flex-col lg:flex-row gap-3 mt-5 items-center justify-center'>
-        <button onClick={()=>router.push("/user/test-reports")} className='bg-blue-200 w-full flex items-center justify-center gap-1 rounded-full px-4 py-2 cursor-pointer hover:bg-blue-300 text-blue-900 font-semibold hover:scale-105 transition-transform duration-500'><FileEdit size={20}/>Feedback</button>
-        <button onClick={()=>router.push("/contact")} className='bg-blue-200 w-full flex items-center justify-center gap-1 rounded-full px-4 py-2 cursor-pointer hover:bg-blue-300 text-blue-900 font-semibold hover:scale-105 transition-transform duration-500'><HeartHandshake size={20}/> Contact</button>
+        <button onClick={()=>router.push("/admin/all-feedbacks")} className='bg-blue-200 w-full flex items-center justify-center gap-1 rounded-full px-4 py-2 cursor-pointer hover:bg-blue-300 text-blue-900 font-semibold hover:scale-102 transition-transform duration-500'><FileEdit size={20}/>All Feedbacks</button>
+        <button onClick={()=>router.push("/admin/reply-contacts")} className='bg-blue-200 w-full flex items-center justify-center gap-1 rounded-full px-4 py-2 cursor-pointer hover:bg-blue-300 text-blue-900 font-semibold hover:scale-102 transition-transform duration-500'><ReplyAll size={20}/>Reply Contacts</button>
         </div>
        </div>
     </div>

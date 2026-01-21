@@ -316,7 +316,11 @@ const handleCancelUpdate = () => {
           <p className='text-xl text-blue-900'><span className='font-semibold'>Appointment Fees:</span> ${doctor?.fees}</p>
           <p className='text-xl text-blue-900'><span className='font-semibold'>Email:</span> {doctor?.email}</p>
           <p className='text-xl text-blue-900'><span className='font-semibold'>Phone:</span> {doctor?.phone === undefined ? "Not Provided":doctor?.phone}</p>
-          <p className='text-xl text-blue-900'><span className='font-semibold'>Joined At:</span> {doctor?.userId.createdAt ? new Date(doctor.userId.createdAt).toLocaleDateString("en-US"):""}</p>
+          <p className='text-xl text-blue-900'><span className='font-semibold'>Joined At:</span> {doctor?.userId.createdAt ? new Date(doctor.userId.createdAt).toLocaleDateString("en-US",{
+             day: "2-digit",
+             month: "short",
+             year: "numeric",
+          }):""}</p>
           <button onClick={()=>setUpdateProfile(true)} className='bg-blue-600 hover:bg-blue-500 rounded-lg text-white text-center px-4 py-3 mt-2 cursor-pointer text-md font-semibold'>Update Profile</button>
          </div>
           </>

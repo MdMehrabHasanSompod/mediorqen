@@ -8,7 +8,6 @@ interface DoctorStore {
   clearDoctor: () => void;
   appointments: IAppointment[];
   setAppointments: (appointments:IAppointment[]) => void;
-  addAppointment: (appointment: IAppointment) => void
   clearAppointments: () => void;
 }
  
@@ -18,6 +17,5 @@ export const useDoctorStore = create<DoctorStore>((set) => ({
   clearDoctor: () => set({ doctor: null }),
   appointments: [],
   setAppointments: (appointments) => set({ appointments }),
-  addAppointment: (appointment) => set((state)=>({appointments:[appointment,...state.appointments]})),
   clearAppointments: () => set({ appointments: [] }),
 }));

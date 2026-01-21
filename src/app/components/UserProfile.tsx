@@ -32,8 +32,11 @@ const UserProfile = ({setOpenMobileSidebar}:propType) => {
   const [deleteLoading,setDeleteLoading] =  useState<boolean>(false)
   const [removeAvatar, setRemoveAvatar] = useState<boolean>(false);
   const router = useRouter()
-
+  
     const removeImage = () => {
+     if (displayUpdatedAvatar && displayUpdatedAvatar.startsWith("blob:")) {
+      URL.revokeObjectURL(displayUpdatedAvatar);
+     }
       setDisplayUpdatedAvatar(undefined);
       setUpdatedAvatar(null);
       const input = document.getElementById("image") as HTMLInputElement | null;
@@ -41,10 +44,13 @@ const UserProfile = ({setOpenMobileSidebar}:propType) => {
       setRemoveAvatar(true);
     };
   
-    const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
       const files = e.target.files;
       if (!files || files.length === 0) return;
       const file = files[0];
+       if (displayUpdatedAvatar && displayUpdatedAvatar.startsWith("blob:")) {
+       URL.revokeObjectURL(displayUpdatedAvatar);
+      }
       setUpdatedAvatar(file);
       setDisplayUpdatedAvatar(URL.createObjectURL(file));
     };
@@ -223,7 +229,7 @@ const handleDeleteAccount = async() => {
                       </div>
                       <div className='my-10 flex items-center justify-around gap-3'>
                         <button onClick={()=>setUpdateProfile(false)} className='bg-red-500 shadow-md px-4 py-2 rounded-md text-white font-semibold cursor-pointer hover:bg-red-600'>Cancel Update</button>
-                        <button type='submit' className='bg-green-500 shadow-md px-4 py-2 rounded-md flex items-center justify-center gap-1 text-white font-semibold cursor-pointer hover:bg-green-600'>{updateLoading && <Loader2 size={18} className='animate-spin' />}Save Update</button>
+                        <button type='submit' className='bg-green-500 shadow-md px-4 py-2 rounded-md flex items-center justify-center gap-1 text-white font-semibold cursor-pointer hover:bg-green-600'>{updateLoading && <Loader2 size={18} className='animate-spin' />}Save Chnages</button>
                       </div>
           </div>
        </form>) :(<>
@@ -239,7 +245,11 @@ const handleDeleteAccount = async() => {
           <p className='text-xl text-blue-900'><span className='font-semibold'>Age:</span>{user?.age === undefined ? "Not Provided":user?.age}</p>
           <p className='text-xl text-blue-900'><span className='font-semibold'>Gender:</span> {user?.gender === undefined ? "Not Provided":user?.gender}</p>
           <p className='text-xl text-blue-900'><span className='font-semibold'>Blood Group:</span> {user?.bloodGroup === undefined ? "Not Provided":user?.bloodGroup}</p>
-          <p className='text-xl text-blue-900'><span className='font-semibold'>Joined At:</span> {user?.createdAt ? new Date(user.createdAt).toLocaleDateString("en-US"):""}</p>
+          <p className='text-xl text-blue-900'><span className='font-semibold'>Joined At:</span> {user?.createdAt ? new Date(user.createdAt).toLocaleDateString("en-US",{
+             day: "2-digit",
+             month: "short",
+             year: "numeric",
+          }):""}</p>
           <button onClick={()=>setUpdateProfile(true)} className='bg-blue-600 hover:bg-blue-500 rounded-lg text-white text-center px-4 py-3 mt-2 cursor-pointer text-md font-semibold'>Update Profile</button>
          </div>
           </>

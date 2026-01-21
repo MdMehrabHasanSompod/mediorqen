@@ -5,6 +5,7 @@ import SessionWrapper from "./components/SessionWrapper";
 import AuthLoader from "./components/AuthLoader";
 import AppointmentsLoader from "./components/AppointmentLoader";
 import DoctorsLoader from "./components/DoctorsLoader";
+import UsersLoader from "./components/UsersLoader";
 
 const poppins = Poppins({
   subsets:['latin'],
@@ -37,6 +38,7 @@ export default function RootLayout({
           <DoctorsLoader/>
           <AuthLoader/>
           <AppointmentsLoader/>
+          <UsersLoader/>
           {children}
         </SessionWrapper>
       </body>

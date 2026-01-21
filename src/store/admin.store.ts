@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { IAdmin } from "@/types/admin";
 import { IAppointment } from "@/types/appointment";
+import { IUser } from "@/types/user";
 
 interface AdminStore {
   admin: IAdmin | null;
@@ -9,6 +10,9 @@ interface AdminStore {
   appointments: IAppointment[];
   setAppointments: (appointments:IAppointment[]) => void;
   clearAppointments: () => void;
+  users: IUser[];
+  setUsers: (users:IUser[]) => void;
+  clearUsers : () => void;
 }
 
 export const useAdminStore = create<AdminStore>((set) => ({
@@ -17,5 +21,8 @@ export const useAdminStore = create<AdminStore>((set) => ({
   clearAdmin: () => set({ admin: null }),
   appointments: [],
   setAppointments: (appointments) => set({ appointments }),
-  clearAppointments: () => set({ appointments: [] }),  
+  clearAppointments: () => set({ appointments: [] }),
+  users : [],
+  setUsers: (users) => set({users}),
+  clearUsers: () => set({users:[]}) ,
 }));

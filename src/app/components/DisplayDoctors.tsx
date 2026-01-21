@@ -9,7 +9,7 @@ const DisplayDoctors = () => {
     const storedDoctors = useDoctorsStore((s)=>s.doctors)
     const [currentPage, setCurrentPage] = useState(1)
     const [searchTerm, setSearchTerm] = useState("")
-     const perPage = 5;
+     const perPage = 30;
     const filteredDoctors = storedDoctors.filter((doctor) => {
       const term = searchTerm.toLowerCase().trim();
       if (!term) return true;

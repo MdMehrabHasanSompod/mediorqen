@@ -47,35 +47,36 @@ export const POST = async (request: NextRequest) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+  
 
     const session = await mongoose.startSession();
+    session.startTransaction();
 
     try {
-      await session.withTransaction(async () => {
+      const newUser = await User.create([{
+        name,
+        email,
+        phone,
+        password: hashedPassword,
+        role: "doctor"
+      }], { session });
 
-        const newUser = await User.create([{
-          name,
-          email,
-          phone,
-          password: hashedPassword,
-          role: "doctor"
-        }], { session });
+      
 
         const imageUrl = await uploadOnCloudinary(image);
-        const newUserId = newUser[0]._id;
+        const newUserId = await newUser[0]._id;
+      const newDoctor = await Doctor.create([{
+        userId: newUserId,
+        name,
+        email,
+        phone,
+        image: imageUrl,
+        speciality,
+        fees: feesNumber,
+        qualifications: qualificationsArray,
+      }], { session });
 
-        await Doctor.create([{
-          userId: newUserId,
-          name,
-          email,
-          phone,
-          image: imageUrl,
-          speciality,
-          fees: feesNumber,
-          qualifications: qualificationsArray,
-        }], { session });
-      });
-
+      await session.commitTransaction();
       session.endSession();
 
       return NextResponse.json({
@@ -83,13 +84,13 @@ export const POST = async (request: NextRequest) => {
         message: "Doctor added successfully"
       }, { status: 200 });
 
-    } catch (error) {
+    } catch (err) {
+      await session.abortTransaction();
       session.endSession();
-      throw error;
+      throw err;
     }
 
   } catch (error) {
-    console.log(error);
-    return NextResponse.json({ success: false, message: "Internal server error" }, { status: 500 });
+    return NextResponse.json({ success: false, message: `Internal server error${error}` }, { status: 500 });
   }
 };
