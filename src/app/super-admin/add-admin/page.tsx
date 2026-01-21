@@ -134,7 +134,7 @@ const AddAdminPage = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed flex items-center justify-center gap-3 text-white font-medium py-3 px-4 rounded-lg transition text-sm mt-2"
+            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 cursor-pointer disabled:cursor-not-allowed flex items-center justify-center gap-3 text-white font-medium py-3 px-4 rounded-lg transition text-sm mt-2"
           >
             {loading && <Loader2 size={20} className="animate-spin" />}
             Create Admin

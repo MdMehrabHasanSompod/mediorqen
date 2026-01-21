@@ -41,7 +41,7 @@ const AdminDisplayCard = ({ name, avatar, email, phone, createdAt}: IUser) => {
         </button>
         <button onClick={() => window.location.href = `tel:${phone}`} className="cursor-pointer w-full sm:flex-1 flex items-center whitespace-nowrap justify-center gap-2 px-5 py-2.5 text-sm lg:text-base bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 transition">
           <PhoneCall size={18} />
-          Call Patient
+          Call Admin
         </button>
       </div>
     </div>

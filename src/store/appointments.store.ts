@@ -1,21 +1,13 @@
 import { create } from "zustand";
-import { IAdmin } from "@/types/admin";
 import { IAppointment } from "@/types/appointment";
-import { IUser } from "@/types/user";
 
-interface AdminStore {
-  admin: IAdmin | null;
-  setAdmin: (admin: IAdmin) => void;
-  clearAdmin: () => void;
+interface AppointmentsStore {
   appointments: IAppointment[];
   setAppointments: (appointments:IAppointment[]) => void;
   clearAppointments: () => void;
 }
 
-export const useAdminStore = create<AdminStore>((set) => ({
-  admin: null,
-  setAdmin: (admin) => set({ admin }),
-  clearAdmin: () => set({ admin: null }),
+export const useAppointmentsStore = create<AppointmentsStore>((set) => ({
   appointments: [],
   setAppointments: (appointments) => set({ appointments }),
   clearAppointments: () => set({ appointments: [] }),

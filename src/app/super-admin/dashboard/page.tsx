@@ -1,11 +1,14 @@
 "use client"
 import React, { useState } from 'react'
-import UserSidebar from '../../components/UserSidebar'
-import Dashboard from '../../components/Dashboard'
-import Appointments from '../../components/Appointments'
-import MyDoctors from '../../components/MyDoctors'
-import UserProfile from '../../components/UserProfile'
-import UserMobileSidebar from '../../components/UserMobileSidebar'
+
+import AllAppointments from '../../components/AllAppointments'
+import AllDoctors from '../../components/AllDoctors'
+import AllPatients from '../../components/AllPatients'
+import SuperAdminSidebar from '../../components/SuperAdminSidebar'
+import SuperAdminMobileSidebar from '../../components/SuperAdminMobileSidebar'
+import AllAdmins from '../../components/AllAdmins'
+import SuperAdminProfile from '../../components/SuperAdminProfile'
+import Dashboard from '../../components/SuperAdminDashboard'
 
 const SuperAdminDashboard = () => {
   const [currentMenu,setCurrentMenu] = useState("dashboard") 
@@ -13,14 +16,14 @@ const SuperAdminDashboard = () => {
 
   return (
     <div className='min-h-screen flex flex-col md:flex-row w-full'>
-       <UserSidebar setCurrentMenu={setCurrentMenu} />
+       <SuperAdminSidebar setCurrentMenu={setCurrentMenu} />
        {
-        openMobileSidebar && <UserMobileSidebar setCurrentMenu={setCurrentMenu} setOpenMobileSidebar={setOpenMobileSidebar}/>
+        openMobileSidebar && <SuperAdminMobileSidebar setCurrentMenu={setCurrentMenu} setOpenMobileSidebar={setOpenMobileSidebar}/>
        }
        <main className='flex-1 w-full  p-5'>
        {
-       currentMenu === "dashboard"? <Dashboard setOpenMobileSidebar={setOpenMobileSidebar}/> : currentMenu === "appointments" ? <Appointments setOpenMobileSidebar={setOpenMobileSidebar}/> : currentMenu === "my-doctor" ? <MyDoctors setOpenMobileSidebar={setOpenMobileSidebar}/>
-       : currentMenu === "profile" ? <UserProfile setOpenMobileSidebar={setOpenMobileSidebar}/> : "Invalid Request"
+       currentMenu === "dashboard"? < Dashboard setOpenMobileSidebar={setOpenMobileSidebar}/> :  currentMenu === "all-admins" ? <AllAdmins setOpenMobileSidebar={setOpenMobileSidebar}/> : currentMenu === "all-appointments" ? <AllAppointments setOpenMobileSidebar={setOpenMobileSidebar}/> : currentMenu === "all-doctors" ? <AllDoctors setOpenMobileSidebar={setOpenMobileSidebar}/> : currentMenu === "all-patients" ? <AllPatients setOpenMobileSidebar={setOpenMobileSidebar}/>
+       : currentMenu === "super-admin-profile" ? <SuperAdminProfile setOpenMobileSidebar={setOpenMobileSidebar}/> : "Invalid Request"
        }
        </main>
     </div>

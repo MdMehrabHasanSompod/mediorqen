@@ -2,15 +2,16 @@
 import { MenuSquare } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import ResponsiveSearch from './ResponsiveSearch'
-import { useSuperAdminStore } from '@/src/store/super-admin.store'
 import AdminDisplayCard from './AdminDisplayCard'
+import { useUsersStore } from '@/src/store/users.store'
 
 type propType = {
   setOpenMobileSidebar: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const AllAdmins = ({setOpenMobileSidebar}:propType) => {
-  const admins = useSuperAdminStore((s)=> s.users.filter((user)=>user.role === "admin"))
+  const users = useUsersStore((s) => s.users);
+  const admins = users.filter((user) => user.role === "admin");
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [searchTerm, setSearchTerm] = useState<string>("")
   const perPage = 20;
@@ -38,7 +39,7 @@ useEffect(() => {
   return (
     <div>
       <h1 className='text-xl md:text-2xl lg:text-3xl text-blue-900 font-semibold  bg-blue-300 w-full py-4 px-8 shadow-md rounded-md mt-2 mb-6 flex items-center justify-between gap-4'>All Doctors<MenuSquare size={30} className='block lg:hidden cursor-pointer' onClick={()=>setOpenMobileSidebar(prev=> !prev)}/></h1>
-      <ResponsiveSearch searchTerm={searchTerm} setSearchTerm={handleSearch} placeholderText='Search doctor by name or speciality...' />
+      <ResponsiveSearch searchTerm={searchTerm} setSearchTerm={handleSearch} placeholderText='Search admin by name...' />
         {filteredAdmins.length === 0 ? (
               <div className="flex items-center justify-center  gap-3 text-gray-600 text-base md:text-lg font-semibold">
                  <p className="text-center text-gray-500 mt-50 text-lg">No Admin found.</p>

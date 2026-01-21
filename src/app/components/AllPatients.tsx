@@ -3,7 +3,7 @@ import { MenuSquare } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import ResponsiveSearch from './ResponsiveSearch'
 import PatientDisplayCard from './PatientDisplayCard'
-import { useAdminStore } from '@/src/store/admin.store'
+import { useUsersStore } from '@/src/store/users.store'
 
 
 type propType = {
@@ -11,8 +11,8 @@ type propType = {
 }
 
 const AllPatients = ({setOpenMobileSidebar}:propType) => {
-  const allUsers = useAdminStore((s)=> s.users)
-  const allPatients = allUsers.filter((user)=>user.role === "user")
+  const users = useUsersStore((s) => s.users);
+  const allPatients = users.filter((user) => user.role === "user");
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [searchTerm, setSearchTerm] = useState<string>("")
   const perPage = 30;

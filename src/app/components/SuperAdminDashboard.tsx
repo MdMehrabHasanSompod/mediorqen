@@ -5,6 +5,7 @@ import { useAppointmentStore } from '@/src/store/appointment.store';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import { useSuperAdminStore } from '@/src/store/super-admin.store';
 
 type propType = {
   setOpenMobileSidebar: React.Dispatch<React.SetStateAction<boolean>>
@@ -12,6 +13,7 @@ type propType = {
 
 const Dashboard = ({setOpenMobileSidebar}:propType) => {
   const session = useSession()
+  const superAdmin = useSuperAdminStore((state)=>state.superAdmin)
   const router = useRouter()
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const setAppointments = useAppointmentStore((state)=>state.setAppointments)
@@ -64,10 +66,10 @@ const Dashboard = ({setOpenMobileSidebar}:propType) => {
 
   return (
     <div className='w-full mx-auto overflow-x-hidden'>
-      <h1 className='text-xl md:text-2xl lg:text-3xl text-blue-900 font-semibold  bg-blue-300 w-full py-4 px-8 shadow-md rounded-md my-2 flex items-center justify-between gap-4'>Patient Dashboard<MenuSquare size={30} className='block lg:hidden cursor-pointer' onClick={()=>setOpenMobileSidebar(prev=> !prev)}/></h1>
+      <h1 className='text-xl md:text-2xl lg:text-3xl text-blue-900 font-semibold  bg-blue-300 w-full py-4 px-8 shadow-md rounded-md my-2 flex items-center justify-between gap-4'>Super Admin Dashboard<MenuSquare size={30} className='block lg:hidden cursor-pointer' onClick={()=>setOpenMobileSidebar(prev=> !prev)}/></h1>
       <div className='flex flex-col items-center justify-center gap-4 mt-10'>
         <p className='text-3xl font-semibold text-blue-900 flex items-center justify-center gap-1'>Welcome Back <Heart size={40} fill='red' strokeWidth={0}/></p>
-        <p className='text-4xl font-bold text-blue-800'>{session.data?.user.name}</p>
+        <p className='text-4xl font-bold text-blue-800'>{superAdmin?.name}</p>
       </div>
       <div className='w-full flex flex-col md:flex-row justify-center gap-8 md:gap-2 mt-20 '>
       <div className='flex-1 flex-col gap-1 '>

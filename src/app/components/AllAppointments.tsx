@@ -3,15 +3,16 @@ import React, { useState } from 'react'
 import {Loader2, MenuSquare} from 'lucide-react'
 import axios from 'axios'
 import { useSession } from 'next-auth/react'
-import { useAdminStore } from '@/src/store/admin.store'
+import { useAppointmentsStore } from '@/src/store/appointments.store'
+import { useAppointmentStore } from '@/src/store/appointment.store'
 
 type propType = {
   setOpenMobileSidebar: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const AllAppointments = ({setOpenMobileSidebar}:propType) => {
-  const appointments = useAdminStore((state)=>state.appointments)
-  const setAppointments = useAdminStore((state)=>state.setAppointments)
+  const appointments = useAppointmentsStore((state)=>state.appointments)
+  const setAppointments = useAppointmentStore((state)=>state.setAppointments)
   const session = useSession()
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const upcomingAppointments = appointments.filter(

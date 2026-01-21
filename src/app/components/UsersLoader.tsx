@@ -1,17 +1,15 @@
 "use client";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
-import { useAdminStore } from "@/src/store/admin.store";
-import { useSuperAdminStore } from "@/src/store/super-admin.store";
 import { getUsers } from "../utils/getUsers";
+import { useUsersStore } from "@/src/store/users.store";
 
 
 export default function UsersLoader() {  
   const session = useSession();
-  const setAdminUsers = useAdminStore((state)=> state.setUsers);
-  const clearAdminUsers = useAdminStore((state)=>state.clearUsers);
-  const setSuperAdminUsers= useSuperAdminStore((state)=> state.setUsers);
-  const clearSuperAdminUsers = useSuperAdminStore((state)=>state.clearUsers);
+  const setUsers = useUsersStore((state)=> state.setUsers);
+  const clearUsers = useUsersStore((state)=>state.clearUsers);
+
 
 
   useEffect(() => {
@@ -22,19 +20,9 @@ export default function UsersLoader() {
             id: session.data.user.id,
             role: session.data.user.role,
           });
-          switch (session.data.user.role) {
-            case "admin":
-               setAdminUsers(fetchedUsers);
-              break;
 
-            case "super-admin":
-               setSuperAdminUsers(fetchedUsers);
-              break;
-          
-            default:
-              console.warn("Unknown role:", session.data.user.role);
-              break;
-          }
+            setUsers(fetchedUsers);
+
         } catch (error) {
           console.error("Failed to load users:", error);
         }
@@ -42,15 +30,14 @@ export default function UsersLoader() {
 
       loadUsers();
     }
-  }, [session.status, session.data,  setAdminUsers, setSuperAdminUsers]);
+  }, [session.status, session.data,  setUsers]);
 
 
   useEffect(() => {
     if (session.status === "unauthenticated") {
-      clearAdminUsers();
-      clearSuperAdminUsers();
+      clearUsers();
     }
-  }, [session.status, clearAdminUsers, clearSuperAdminUsers]);
+  }, [session.status, clearUsers]);
 
   return null;
 }

@@ -4,20 +4,18 @@ import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { getAppointments } from "../utils/getAppointments";
 import { useDoctorStore } from "@/src/store/doctor.store";
-import { useAdminStore } from "@/src/store/admin.store";
-import { useSuperAdminStore } from "@/src/store/super-admin.store";
+import { useAppointmentsStore } from "@/src/store/appointments.store";
 
 
 export default function AppointmentsLoader() {  
   const session = useSession();
-  const setAppointments = useAppointmentStore((state) => state.setAppointments);
-  const clearAppointments = useAppointmentStore((state) => state.clearAppointments);
+  const setUserAppointments = useAppointmentStore((state) => state.setAppointments);
+  const clearUserAppointments = useAppointmentStore((state) => state.clearAppointments);
   const setDoctorAppointments = useDoctorStore((state)=> state.setAppointments);
   const clearDoctorAppointments = useDoctorStore((state)=>state.clearAppointments);
-  const setAdminAppointments = useAdminStore((state)=> state.setAppointments);
-  const clearAdminAppointments = useAdminStore((state)=>state.clearAppointments);
-  const setSuperAdminAppointments = useSuperAdminStore((state)=> state.setAppointments);
-  const clearSuperAdminAppointments = useSuperAdminStore((state)=>state.clearAppointments);
+  const setAppointments = useAppointmentsStore((state)=> state.setAppointments);
+  const clearAppointments = useAppointmentStore((state)=>state.clearAppointments);
+
 
   useEffect(() => {
     if (session.status === "authenticated" && session.data.user) {
@@ -29,7 +27,7 @@ export default function AppointmentsLoader() {
           });
           switch (session.data.user.role) {
             case "user":
-               setAppointments(fetchedAppointments);
+               setUserAppointments(fetchedAppointments);
               break;
             
             case "doctor":
@@ -37,11 +35,11 @@ export default function AppointmentsLoader() {
               break;
             
             case "admin":
-               setAdminAppointments(fetchedAppointments);
+               setAppointments(fetchedAppointments);
               break;
 
             case "super-admin":
-               setSuperAdminAppointments(fetchedAppointments);
+               setAppointments(fetchedAppointments);
               break;
           
             default:
@@ -55,17 +53,16 @@ export default function AppointmentsLoader() {
 
       loadAppointments();
     }
-  }, [session.status, session.data, setAppointments, setDoctorAppointments,setAdminAppointments,setSuperAdminAppointments]);
+  }, [session.status, session.data, setUserAppointments, setDoctorAppointments,setAppointments]);
 
 
   useEffect(() => {
     if (session.status === "unauthenticated") {
-      clearAppointments();
+      clearUserAppointments();
       clearDoctorAppointments();
-      clearAdminAppointments();
-      clearSuperAdminAppointments();
+      clearAppointments();
     }
-  }, [session.status, clearAppointments, clearDoctorAppointments,clearAdminAppointments,clearSuperAdminAppointments]);
+  }, [session.status, clearUserAppointments, clearDoctorAppointments,clearAppointments]);
 
   return null;
 }
